@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Belinda Sales Dashboard</title>
+    <title>Belinda Dashboard</title>
     <style>
         :root {
             --primary: #DE3B20;
@@ -11,187 +11,135 @@
             --text-light: #8898aa;
             --bg-body: #f8f9fe;
             --white: #ffffff;
-            --radius: 16px;
-            --shadow: 0 7px 14px 0 rgba(60,66,87, 0.08), 0 3px 6px 0 rgba(0,0,0, 0.04);
+            --radius: 12px;
+            --shadow: 0 4px 12px rgba(0,0,0, 0.08);
             
-            /* Цвета статусов */
-            --green-text: #2dce89;
-            --green-bg: rgba(45, 206, 137, 0.1);
-            --orange-text: #fb6340;
-            --orange-bg: rgba(251, 99, 64, 0.1);
-            --red-text: #f5365c;
-            --red-bg: rgba(245, 54, 92, 0.1);
+            --green-text: #2dce89; --green-bg: rgba(45, 206, 137, 0.1);
+            --orange-text: #fb6340; --orange-bg: rgba(251, 99, 64, 0.1);
+            --red-text: #f5365c; --red-bg: rgba(245, 54, 92, 0.1);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            background-color: var(--bg-body); 
-            color: var(--text-dark); 
-            margin: 0; padding: 0; min-height: 100vh;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-dark); margin: 0; padding: 0; min-height: 100vh; }
 
         /* Анимация */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.4s ease-out forwards; }
 
-        /* --- Экран входа --- */
-        #login-screen {
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            height: 100vh; padding: 20px; background: white;
-        }
-        .login-card {
-            background: var(--white); width: 100%; max-width: 360px; text-align: center;
-        }
+        /* Login Screen */
+        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: white; }
+        .login-card { width: 100%; max-width: 360px; text-align: center; padding: 20px; }
         .logo { max-height: 60px; margin-bottom: 40px; }
-        
-        .input-group { position: relative; margin-bottom: 15px; }
-        input {
-            width: 100%; padding: 16px; border: 1px solid #e7e7e7; background: #fcfcfc;
-            border-radius: 12px; font-size: 15px; transition: all 0.2s; color: var(--text-dark);
-        }
-        input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(222, 59, 32, 0.1); }
-        
-        button {
-            width: 100%; padding: 16px; background-color: var(--primary); color: white;
-            border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;
-            margin-top: 10px; transition: transform 0.1s; box-shadow: 0 4px 6px rgba(222, 59, 32, 0.3);
-        }
-        button:active { transform: scale(0.98); }
+        input { width: 100%; padding: 16px; margin-bottom: 15px; border: 1px solid #e7e7e7; border-radius: 12px; background: #fcfcfc; font-size: 15px; }
+        input:focus { border-color: var(--primary); background: #fff; }
+        button { width: 100%; padding: 16px; background-color: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; }
         #login-error { color: var(--red-text); margin-top: 15px; font-size: 14px; display: none; }
 
-        /* --- Приложение --- */
+        /* Header */
         #app-container { display: none; padding-bottom: 60px; }
-
-        .app-header {
-            background: var(--white); padding: 15px 5%; 
-            display: flex; justify-content: space-between; align-items: center; 
-            position: sticky; top: 0; z-index: 100;
-            border-bottom: 1px solid #eff2f7;
-        }
+        .app-header { background: var(--white); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #eff2f7; }
         .header-logo { height: 32px; }
-        
         .user-info { display: flex; align-items: center; gap: 15px; }
-        .user-name { font-weight: 600; font-size: 14px; color: var(--text-dark); }
-        .user-role { font-size: 11px; color: var(--text-light); display: block; text-align: right; }
-        
-        .logout-btn {
-            background: #fff; color: var(--text-dark); border: 1px solid #e7e7e7; box-shadow: none;
-            width: auto; padding: 8px 16px; margin: 0; font-size: 13px; border-radius: 8px;
-        }
+        .user-name { font-weight: 600; font-size: 14px; }
+        .logout-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 600; }
 
         .content { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
-        
-        h3 { 
-            color: var(--text-dark); margin: 40px 0 20px 0; font-weight: 700; font-size: 18px; 
-            display: flex; align-items: center; gap: 10px;
-        }
-        h3::before { content: ''; display: block; width: 6px; height: 24px; background: var(--primary); border-radius: 4px; }
 
-        /* Фильтры */
+        /* Filters Styling */
         .filters {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;
             background: var(--white); padding: 20px; border-radius: var(--radius);
             box-shadow: var(--shadow); margin-bottom: 30px; border: 1px solid #f1f3f9;
         }
-        .filter-group label { display: block; font-size: 11px; color: var(--text-light); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
-        select { 
-            width: 100%; padding: 12px; border: 1px solid #e0e5ee; border-radius: 8px; 
-            background: #fff; font-size: 14px; color: var(--text-dark); font-weight: 500;
-            appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23424B52' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em;
+        .filter-group label { display: block; font-size: 11px; color: var(--text-light); margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
+        
+        /* === CUSTOM MULTI-SELECT CSS === */
+        .multiselect { position: relative; width: 100%; }
+        .select-btn {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; border: 1px solid #e0e5ee; border-radius: 8px;
+            background: #fff; cursor: pointer; font-size: 14px; font-weight: 500;
+            min-height: 45px;
         }
-        select:disabled { background-color: #f6f9fc; color: #a0aec0; cursor: not-allowed; }
+        .select-btn::after {
+            content: ""; width: 6px; height: 6px; border-right: 2px solid #8898aa; border-bottom: 2px solid #8898aa;
+            transform: rotate(45deg); transition: 0.2s; margin-left: 10px;
+        }
+        .select-btn.open::after { transform: rotate(-135deg); }
+        
+        .list-items {
+            position: absolute; top: 110%; left: 0; width: 100%;
+            background: #fff; border-radius: 8px; padding: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #f1f3f9;
+            display: none; z-index: 200; max-height: 300px; overflow-y: auto;
+        }
+        .list-items.show { display: block; }
+        
+        .item {
+            display: flex; align-items: center; height: 40px; cursor: pointer;
+            padding: 0 10px; border-radius: 6px; transition: 0.2s;
+        }
+        .item:hover { background-color: #f6f9fc; }
+        .item .checkbox {
+            height: 18px; width: 18px; border-radius: 4px; border: 2px solid #c0c0c0;
+            display: flex; align-items: center; justify-content: center; margin-right: 12px; transition: 0.2s; flex-shrink: 0;
+        }
+        .item.checked .checkbox { background-color: var(--primary); border-color: var(--primary); }
+        .item.checked .checkbox::before {
+            content: ""; height: 10px; width: 5px; border-bottom: 2px solid #fff; border-right: 2px solid #fff;
+            transform: rotate(45deg); margin-bottom: 2px;
+        }
+        .item-text { font-size: 14px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* =============================== */
 
         /* KPI Cards */
-        .kpi-container {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px;
-        }
+        .kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .kpi-card {
             background: var(--white); border-radius: var(--radius); padding: 25px; 
-            box-shadow: var(--shadow); border: 1px solid #f1f3f9;
-            position: relative; overflow: hidden;
+            box-shadow: var(--shadow); border: 1px solid #f1f3f9; position: relative; overflow: hidden;
             display: flex; flex-direction: column; gap: 20px;
         }
-        .kpi-card::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
-            background: #e0e5ee;
-        }
+        .kpi-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: #e0e5ee; }
         .kpi-card.status-green::before { background: var(--green-text); }
         .kpi-card.status-orange::before { background: var(--orange-text); }
         .kpi-card.status-red::before { background: var(--red-text); }
-
-        .kpi-header { display: flex; justify-content: space-between; align-items: center; }
-        .kpi-title { font-size: 13px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-        
-        .kpi-main-stat {
-            display: flex; align-items: baseline; gap: 10px; margin-top: 5px;
-        }
+        .kpi-header { display: flex; justify-content: space-between; }
+        .kpi-title { font-size: 13px; color: var(--text-light); text-transform: uppercase; font-weight: 700; }
+        .kpi-main-stat { display: flex; align-items: baseline; gap: 10px; }
         .kpi-percent-big { font-size: 32px; font-weight: 800; color: var(--text-dark); }
-        .kpi-percent-badge {
-            font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
-        }
-
-        .kpi-details {
-            display: flex; gap: 30px; border-top: 1px solid #f1f3f9; padding-top: 15px;
-        }
+        .kpi-percent-badge { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+        .kpi-details { display: flex; gap: 30px; border-top: 1px solid #f1f3f9; padding-top: 15px; }
         .kpi-sub-label { font-size: 11px; color: var(--text-light); display: block; margin-bottom: 4px; }
         .kpi-sub-val { font-size: 16px; font-weight: 600; color: var(--text-dark); }
 
-        /* --- Tables --- */
-        .table-wrapper {
-            background: var(--white); border-radius: var(--radius); 
-            box-shadow: var(--shadow); border: 1px solid #f1f3f9;
-            overflow-x: auto; -webkit-overflow-scrolling: touch;
-        }
+        /* Tables */
+        h3 { margin: 40px 0 20px 0; font-weight: 700; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+        h3::before { content: ''; display: block; width: 6px; height: 24px; background: var(--primary); border-radius: 4px; }
+        
+        .table-wrapper { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow-x: auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px; font-size: 14px; }
-        
-        th { 
-            padding: 18px 20px; text-align: left; background: #f6f9fc; 
-            color: var(--text-light); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
-            border-bottom: 1px solid #eff2f7; white-space: nowrap;
-        }
-        td { padding: 14px 20px; border-bottom: 1px solid #eff2f7; vertical-align: middle; white-space: nowrap; }
-        tr:last-child td { border-bottom: none; }
-        
-        tbody tr { transition: background 0.2s; }
+        th { padding: 18px 20px; text-align: left; background: #f6f9fc; color: var(--text-light); font-weight: 600; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #eff2f7; }
+        td { padding: 14px 20px; border-bottom: 1px solid #eff2f7; white-space: nowrap; }
         tbody tr:hover { background-color: #f8f9fe; cursor: pointer; }
-
-        .prod-name { font-weight: 600; color: var(--text-dark); display: block; }
-        .num { text-align: right; font-variant-numeric: tabular-nums; color: var(--text-dark); }
-        .num-light { color: var(--text-light); }
-
-        /* Бейджи */
-        .badge {
-            display: inline-block; padding: 4px 10px; border-radius: 50px;
-            font-size: 12px; font-weight: 700; text-align: center; min-width: 55px;
-        }
+        .num { text-align: right; } .num-light { color: var(--text-light); }
+        
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; text-align: center; min-width: 55px; }
         .badge-green { background-color: var(--green-bg); color: var(--green-text); }
         .badge-orange { background-color: var(--orange-bg); color: var(--orange-text); }
         .badge-red { background-color: var(--red-bg); color: var(--red-text); }
-
-        /* Итоги */
-        .row-year td { background-color: #fcfdfe; font-weight: 700; border-top: 2px solid #eff2f7; color: var(--text-dark); font-size: 15px; }
+        
+        /* Стили Итогов */
+        .row-year td { background-color: #e8f5e9; font-weight: 700; border-top: 2px solid #2e7d32; font-size: 15px; color: #1b5e20; }
+        .row-quarter td { background-color: #e3f2fd; font-weight: 600; color: #0d47a1; }
 
         /* Details */
         #detail-view { display: none; }
         .detail-header { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
-        .back-btn { 
-            align-self: flex-start; background: #fff; color: var(--text-dark); border: 1px solid #e7e7e7;
-            padding: 10px 20px; border-radius: 50px; font-size: 14px; display: flex; align-items: center; gap: 8px;
-        }
-        .back-btn:hover { background: #f6f9fc; }
-        .prod-detail-title { font-size: 24px; font-weight: 800; color: var(--text-dark); }
-        .prod-detail-sub { color: var(--text-light); }
-
-        #loading { text-align: center; padding: 60px; color: var(--text-light); font-weight: 500; }
-
-        @media (max-width: 600px) {
-            .app-header { padding: 15px; }
-            .content { padding: 0 10px; margin-top: 20px; }
-            .filters { padding: 15px; gap: 10px; }
-        }
+        .back-btn { align-self: flex-start; background: #fff; border: 1px solid #e7e7e7; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 14px; color: var(--text-dark); font-weight: 600; }
+        .prod-detail-title { font-size: 24px; font-weight: 800; }
+        
+        #loading { text-align: center; padding: 60px; color: var(--text-light); }
+        @media (max-width: 600px) { .app-header, .content, .filters { padding: 15px; } }
     </style>
 </head>
 <body>
@@ -199,12 +147,8 @@
 <div id="login-screen" class="fade-in">
     <div class="login-card">
         <img src="https://belinda.tj/img/main-logo.svg" alt="Belinda" class="logo">
-        <div class="input-group">
-            <input type="text" id="loginUser" placeholder="Логин">
-        </div>
-        <div class="input-group">
-            <input type="password" id="loginPass" placeholder="Пароль">
-        </div>
+        <input type="text" id="loginUser" placeholder="Логин">
+        <input type="password" id="loginPass" placeholder="Пароль">
         <button onclick="performLogin()">Войти</button>
         <div id="login-error">Ошибка входа</div>
     </div>
@@ -216,7 +160,6 @@
         <div class="user-info">
             <div>
                 <span class="user-name" id="display-username">...</span>
-                <span class="user-role" id="display-role">Сотрудник</span>
             </div>
             <button class="logout-btn" onclick="logout()">Выйти</button>
         </div>
@@ -228,57 +171,49 @@
         <div id="dashboard-view" style="display:none;">
             <div class="filters">
                 <div class="filter-group">
-                    <label>Регион</label>
-                    <select id="regionSelect"><option value="all">Все регионы</option></select>
+                    <label>Регион(ы)</label>
+                    <div class="multiselect" id="region-multiselect">
+                        <div class="select-btn">Все регионы</div>
+                        <div class="list-items"></div>
+                    </div>
                 </div>
                 <div class="filter-group">
-                    <label>Группа</label>
-                    <select id="groupSelect"><option value="all">Все группы</option></select>
+                    <label>Группа(ы)</label>
+                    <div class="multiselect" id="group-multiselect">
+                        <div class="select-btn">Все группы</div>
+                        <div class="list-items"></div>
+                    </div>
                 </div>
                 <div class="filter-group">
-                    <label>Месяц</label>
-                    <select id="monthSelect"></select>
+                    <label>Месяц(ы)</label>
+                    <div class="multiselect" id="month-multiselect">
+                        <div class="select-btn">Выберите месяц</div>
+                        <div class="list-items"></div>
+                    </div>
                 </div>
             </div>
 
             <div class="kpi-container">
                 <div class="kpi-card" id="card-qty">
-                    <div class="kpi-header">
-                        <span class="kpi-title">Выполнили (кол)</span>
-                    </div>
+                    <div class="kpi-header"><span class="kpi-title">План (Кол)</span></div>
                     <div class="kpi-main-stat">
                         <span class="kpi-percent-big" id="kpi-qty-perc">0%</span>
                         <span class="kpi-percent-badge" id="badge-qty">Вып.</span>
                     </div>
                     <div class="kpi-details">
-                        <div>
-                            <span class="kpi-sub-label">План</span>
-                            <span class="kpi-sub-val" id="kpi-qty-plan">0</span>
-                        </div>
-                        <div>
-                            <span class="kpi-sub-label">Факт</span>
-                            <span class="kpi-sub-val" id="kpi-qty-fact">0</span>
-                        </div>
+                        <div><span class="kpi-sub-label">План</span><span class="kpi-sub-val" id="kpi-qty-plan">0</span></div>
+                        <div><span class="kpi-sub-label">Факт</span><span class="kpi-sub-val" id="kpi-qty-fact">0</span></div>
                     </div>
                 </div>
-
                 <div class="kpi-card" id="card-sum">
-                    <div class="kpi-header">
-                        <span class="kpi-title">Выполнили (сум)</span>
-                    </div>
+                    <div class="kpi-header"><span class="kpi-title">План (Сум)</span></div>
                     <div class="kpi-main-stat">
                         <span class="kpi-percent-big" id="kpi-sum-perc">0%</span>
                         <span class="kpi-percent-badge" id="badge-sum">Вып.</span>
                     </div>
                     <div class="kpi-details">
-                        <div>
-                            <span class="kpi-sub-label">План</span>
-                            <span class="kpi-sub-val" id="kpi-sum-plan">0</span>
-                        </div>
-                        <div>
-                            <span class="kpi-sub-label">Факт</span>
-                            <span class="kpi-sub-val" id="kpi-sum-fact">0</span>
-                        </div>
+                        <div><span class="kpi-sub-label">План</span><span class="kpi-sub-val" id="kpi-sum-plan">0</span></div>
+                        <div><span class="kpi-sub-label">Факт</span><span class="kpi-sub-val" id="kpi-sum-fact">0</span></div>
                     </div>
                 </div>
             </div>
@@ -289,12 +224,8 @@
                     <thead>
                         <tr>
                             <th>Препарат</th>
-                            <th class="num">Пл кол</th>
-                            <th class="num">Фк кол</th>
-                            <th class="num">% кол</th>
-                            <th class="num">Пл Сум</th>
-                            <th class="num">Фк Сум</th>
-                            <th class="num">% сум</th>
+                            <th class="num">Пл кол</th><th class="num">Фк кол</th><th class="num">% кол</th>
+                            <th class="num">Пл Сум</th><th class="num">Фк Сум</th><th class="num">% сум</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -307,12 +238,8 @@
                     <thead>
                         <tr>
                             <th>Период</th>
-                            <th class="num">Пл кол</th>
-                            <th class="num">Фк кол</th>
-                            <th class="num">% кол</th>
-                            <th class="num">Пл Сум</th>
-                            <th class="num">Фк Сум</th>
-                            <th class="num">% сум</th>
+                            <th class="num">Пл кол</th><th class="num">Фк кол</th><th class="num">% кол</th>
+                            <th class="num">Пл Сум</th><th class="num">Фк Сум</th><th class="num">% сум</th>
                         </tr>
                     </thead>
                     <tbody id="summaryBody"></tbody>
@@ -328,18 +255,13 @@
                     <div class="prod-detail-sub" id="detail-subtitle">Subtitle</div>
                 </div>
             </div>
-            
             <div class="table-wrapper">
                 <table id="detailTable">
                     <thead>
                         <tr>
                             <th>Месяц</th>
-                            <th class="num">Пл кол</th>
-                            <th class="num">Фк кол</th>
-                            <th class="num">% кол</th>
-                            <th class="num">Пл Сум</th>
-                            <th class="num">Фк Сум</th>
-                            <th class="num">% сум</th>
+                            <th class="num">Пл кол</th><th class="num">Фк кол</th><th class="num">% кол</th>
+                            <th class="num">Пл Сум</th><th class="num">Фк Сум</th><th class="num">% сум</th>
                         </tr>
                     </thead>
                     <tbody id="detailBody"></tbody>
@@ -350,32 +272,24 @@
 </div>
 
 <script>
-    // ====================================================
-    // !!! ВСТАВЬТЕ ВАШУ ССЫЛКУ НИЖЕ !!!
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1fQcA91t5HIUQ6b68N6XjgCRygVVrkG9kQ2oFQtnCIhwNXXjJ0AhQJSefgY8gFb5rPQ/exec"; 
-    // ====================================================
+    // === ССЫЛКА НА ВАШ APPS SCRIPT ===
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtCJ-DCoAY3uxTj2AayUpwqPxNzwYECySI3ag4vFy_XXH6kcYkeLJAiyXdcsA9D5jRLA/exec"; 
+    // ==================================
 
     let allData = {};
     let currentUser = null; 
+    let selectedRegions = [];
+    let selectedGroups = [];
+    let selectedMonths = []; 
 
     window.onload = function() {
         const savedUser = localStorage.getItem('belindaUser');
         if (savedUser) {
             currentUser = JSON.parse(savedUser);
-            setupUserUI();
+            document.getElementById('display-username').innerText = currentUser.login;
             showApp();
         }
     };
-
-    function setupUserUI() {
-        if(currentUser) {
-            document.getElementById('display-username').innerText = currentUser.login || "Пользователь";
-            let role = "Сотрудник";
-            if(currentUser.isAdmin) role = "Администратор";
-            else if(currentUser.region) role = currentUser.region;
-            document.getElementById('display-role').innerText = role;
-        }
-    }
 
     function performLogin() {
         const loginInput = document.getElementById('loginUser').value.trim();
@@ -383,40 +297,30 @@
         const errorDiv = document.getElementById('login-error');
         const loginBtn = document.querySelector('#login-screen button');
 
-        if (!loginInput || !passInput) {
-            errorDiv.innerText = "Введите логин и пароль"; errorDiv.style.display = 'block'; return;
-        }
+        if (!loginInput || !passInput) { errorDiv.innerText = "Введите данные"; errorDiv.style.display='block'; return; }
+        errorDiv.style.display='none'; loginBtn.innerText="Вход..."; loginBtn.disabled=true;
 
-        errorDiv.style.display = 'none'; loginBtn.innerText = "Вход..."; loginBtn.disabled = true;
-
-        const loginUrl = `${SCRIPT_URL}?action=login&login=${encodeURIComponent(loginInput)}&password=${encodeURIComponent(passInput)}`;
-
-        fetch(loginUrl)
-            .then(response => response.json())
+        fetch(`${SCRIPT_URL}?action=login&login=${encodeURIComponent(loginInput)}&password=${encodeURIComponent(passInput)}`)
+            .then(r => r.json())
             .then(data => {
-                loginBtn.innerText = "Войти"; loginBtn.disabled = false;
-                if (data.status === 'success') {
-                    data.login = loginInput; 
-                    currentUser = data; 
+                loginBtn.innerText="Войти"; loginBtn.disabled=false;
+                if(data.status==='success') {
+                    data.login = data.login || loginInput; 
+                    currentUser = data;
                     localStorage.setItem('belindaUser', JSON.stringify(currentUser));
-                    setupUserUI();
+                    document.getElementById('display-username').innerText = currentUser.login;
                     showApp();
                 } else {
-                    errorDiv.innerText = data.message; errorDiv.style.display = 'block';
+                    errorDiv.innerText = data.message; errorDiv.style.display='block';
                 }
             })
-            .catch(err => {
-                loginBtn.innerText = "Войти"; loginBtn.disabled = false;
-                errorDiv.innerText = "Ошибка соединения"; errorDiv.style.display = 'block';
-            });
+            .catch(e => { loginBtn.innerText="Войти"; errorDiv.innerText="Ошибка сети"; errorDiv.style.display='block'; });
     }
 
     function logout() {
-        if(confirm("Выйти из аккаунта?")) {
-            localStorage.removeItem('belindaUser'); location.reload();
-        }
+        if(confirm("Выйти?")) { localStorage.removeItem('belindaUser'); location.reload(); }
     }
-
+    
     function showApp() {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('app-container').style.display = 'block';
@@ -424,294 +328,298 @@
     }
 
     function loadSalesData() {
-        const loadingDiv = document.getElementById('loading');
-        const dashboardView = document.getElementById('dashboard-view');
-        
-        loadingDiv.style.display = 'block';
-        dashboardView.style.display = 'none';
-
         fetch(`${SCRIPT_URL}?action=getData`)
-            .then(response => response.json())
+            .then(r => r.json())
             .then(data => {
                 allData = data;
-                initFilters();
-                loadingDiv.style.display = 'none';
-                dashboardView.style.display = 'block';
-                dashboardView.classList.add('fade-in');
-                updateAll();
-            })
-            .catch(err => {
-                loadingDiv.innerHTML = "Ошибка загрузки данных";
+                initApp();
+                document.getElementById('loading').style.display='none';
+                document.getElementById('dashboard-view').style.display='block';
+                document.getElementById('dashboard-view').classList.add('fade-in');
             });
     }
 
-    function initFilters() {
-        const regionSelect = document.getElementById('regionSelect');
-        const monthSelect = document.getElementById('monthSelect');
-        const groupSelect = document.getElementById('groupSelect');
+    function initApp() {
+        let allowedRegions = [];
+        if (!currentUser.region || currentUser.region.toLowerCase().includes('админ')) {
+            allowedRegions = allData.filters.regions;
+        } else {
+            let userRegs = currentUser.region.split(',').map(s => s.trim());
+            allowedRegions = allData.filters.regions.filter(r => userRegs.includes(r));
+        }
+        setupMultiSelect('region-multiselect', allowedRegions, (selected) => {
+            selectedRegions = selected;
+            updateAll();
+        }, true); 
 
-        regionSelect.innerHTML = '<option value="all">Все регионы</option>';
-        groupSelect.innerHTML = '<option value="all">Все группы</option>';
-        monthSelect.innerHTML = '';
+        let allowedGroups = [];
+        if (!currentUser.group || currentUser.group.toLowerCase().includes('админ')) {
+            allowedGroups = allData.filters.groups;
+        } else {
+            let userGrps = currentUser.group.split(',').map(s => s.trim());
+            allowedGroups = allData.filters.groups.filter(g => userGrps.includes(g));
+        }
+        setupMultiSelect('group-multiselect', allowedGroups, (selected) => {
+            selectedGroups = selected;
+            updateAll();
+        }, true);
 
-        allData.filters.regions.forEach(r => {
-            let opt = document.createElement('option'); opt.value = r; opt.innerText = r; regionSelect.appendChild(opt);
+        setupMultiSelect('month-multiselect', allData.filters.months, (selected) => {
+            selectedMonths = selected;
+            updateAll();
+        }, false); 
+        
+        if(allData.filters.months.length > 0) {
+            const mContainer = document.getElementById('month-multiselect');
+            const items = mContainer.querySelectorAll('.item');
+            if(items.length > 1) items[1].click(); 
+        }
+    }
+
+    function setupMultiSelect(containerId, optionsList, onChangeCallback, selectAllByDefault) {
+        const container = document.getElementById(containerId);
+        const btn = container.querySelector('.select-btn');
+        const list = container.querySelector('.list-items');
+        list.innerHTML = '';
+        
+        let allItem = document.createElement('div');
+        allItem.className = 'item'; 
+        allItem.innerHTML = `<span class="checkbox"><i class="fa fa-check"></i></span><span class="item-text">Выбрать все</span>`;
+        allItem.addEventListener('click', () => {
+            const isChecked = allItem.classList.contains('checked');
+            if(isChecked) {
+                allItem.classList.remove('checked');
+                list.querySelectorAll('.item:not(:first-child)').forEach(el => el.classList.remove('checked'));
+            } else {
+                allItem.classList.add('checked');
+                list.querySelectorAll('.item:not(:first-child)').forEach(el => el.classList.add('checked'));
+            }
+            updateBtnText();
         });
-        allData.filters.groups.forEach(g => {
-            let opt = document.createElement('option'); opt.value = g; opt.innerText = g; groupSelect.appendChild(opt);
-        });
-        allData.filters.months.forEach((m, index) => {
-            let opt = document.createElement('option'); opt.value = m; opt.innerText = m;
-            if (index === 0) opt.selected = true;
-            monthSelect.appendChild(opt);
+        list.appendChild(allItem);
+
+        optionsList.forEach(opt => {
+            let item = document.createElement('div');
+            item.className = 'item'; 
+            item.dataset.value = opt;
+            item.innerHTML = `<span class="checkbox"></span><span class="item-text">${opt}</span>`;
+            item.addEventListener('click', () => {
+                item.classList.toggle('checked');
+                if(!item.classList.contains('checked')) allItem.classList.remove('checked');
+                const allOpts = list.querySelectorAll('.item:not(:first-child)');
+                const allChecked = list.querySelectorAll('.item.checked:not(:first-child)');
+                if(allOpts.length === allChecked.length && allOpts.length > 0) allItem.classList.add('checked');
+                updateBtnText();
+            });
+            list.appendChild(item);
         });
 
-        if (!currentUser.isAdmin) {
-            if (currentUser.region) { regionSelect.value = currentUser.region; regionSelect.disabled = true; }
-            if (currentUser.group) { groupSelect.value = currentUser.group; groupSelect.disabled = true; }
+        if(selectAllByDefault) { allItem.click(); }
+
+        function updateBtnText() {
+            const checkedItems = Array.from(list.querySelectorAll('.item.checked:not(:first-child)'));
+            const values = checkedItems.map(el => el.dataset.value);
+            if(checkedItems.length > 0 && checkedItems.length < optionsList.length) {
+                if (checkedItems.length <= 2) btn.innerText = values.join(', ');
+                else btn.innerText = `Выбрано (${checkedItems.length})`;
+            } else if (checkedItems.length === optionsList.length && optionsList.length > 0) {
+                btn.innerText = "Все выбраны";
+            } else {
+                btn.innerText = "Выберите...";
+            }
+            onChangeCallback(values);
         }
 
-        regionSelect.addEventListener('change', updateAll);
-        monthSelect.addEventListener('change', updateAll);
-        groupSelect.addEventListener('change', updateAll);
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.multiselect .select-btn').forEach(b => {
+                if(b !== btn) { b.classList.remove('open'); b.nextElementSibling.classList.remove('show'); }
+            });
+            btn.classList.toggle('open');
+            list.classList.toggle('show');
+        });
     }
+    
+    window.addEventListener('click', (e) => {
+        document.querySelectorAll('.multiselect').forEach(ms => {
+            if (!ms.contains(e.target)) {
+                ms.querySelector('.select-btn').classList.remove('open');
+                ms.querySelector('.list-items').classList.remove('show');
+            }
+        });
+    });
 
     function updateAll() {
         renderKPI();
         renderTable();
-        renderSummary();
+        renderSummary(true); // Всегда показываем все месяцы + кварталы
     }
 
-    // --- KPI ---
-    function renderKPI() {
-        const selectedRegion = document.getElementById('regionSelect').value;
-        const selectedGroup = document.getElementById('groupSelect').value;
-        const selectedMonth = document.getElementById('monthSelect').value;
-        if (!selectedMonth) return;
-
-        const filteredProducts = allData.products.filter(p => {
-            const regionMatch = selectedRegion === 'all' || p.region === selectedRegion;
-            const groupMatch = selectedGroup === 'all' || p.group === selectedGroup;
+    function getFilteredProducts() {
+        return allData.products.filter(p => {
+            const regionMatch = selectedRegions.includes(p.region);
+            const groupMatch = selectedGroups.includes(p.group);
             return regionMatch && groupMatch;
         });
+    }
 
-        let total = { pq: 0, fq: 0, ps: 0, fs: 0 };
-        filteredProducts.forEach(p => {
-            const sales = p.salesData[selectedMonth];
-            if (sales) {
-                total.pq += Number(sales.pl_qty) || 0;
-                total.fq += Number(sales.fc_qty) || 0;
-                total.ps += Number(sales.pl_sum) || 0;
-                total.fs += Number(sales.fc_sum) || 0;
+    function aggregateMonths(product, monthsToAggregate) {
+        let t = { pq:0, fq:0, ps:0, fs:0 };
+        monthsToAggregate.forEach(m => {
+            let s = product.salesData[m];
+            if(s) {
+                t.pq += Number(s.pl_qty)||0; t.fq += Number(s.fc_qty)||0;
+                t.ps += Number(s.pl_sum)||0; t.fs += Number(s.fc_sum)||0;
             }
         });
-
-        document.getElementById('kpi-qty-plan').innerText = formatNum(total.pq);
-        document.getElementById('kpi-qty-fact').innerText = formatNum(total.fq);
-        document.getElementById('kpi-sum-plan').innerText = formatNum(total.ps);
-        document.getElementById('kpi-sum-fact').innerText = formatNum(total.fs);
-
-        const percQ = total.pq > 0 ? (total.fq / total.pq) * 100 : 0;
-        const percS = total.ps > 0 ? (total.fs / total.ps) * 100 : 0;
-
-        document.getElementById('kpi-qty-perc').innerText = percQ.toFixed(1) + '%';
-        document.getElementById('kpi-sum-perc').innerText = percS.toFixed(1) + '%';
-
-        updateKPIStyle('card-qty', 'badge-qty', percQ);
-        updateKPIStyle('card-sum', 'badge-sum', percS);
+        return t;
     }
 
-    function updateKPIStyle(cardId, badgeId, val) {
-        const card = document.getElementById(cardId);
-        const badge = document.getElementById(badgeId);
-        
-        card.classList.remove('status-green', 'status-orange', 'status-red');
-        badge.classList.remove('badge-green', 'badge-orange', 'badge-red');
-        badge.classList.add('badge');
-
-        if (val >= 100) {
-            card.classList.add('status-green');
-            badge.classList.add('badge-green');
-            badge.innerText = "Отлично";
-        } else if (val >= 50) {
-            card.classList.add('status-orange');
-            badge.classList.add('badge-orange');
-            badge.innerText = "Норма";
-        } else {
-            card.classList.add('status-red');
-            badge.classList.add('badge-red');
-            badge.innerText = "Внимание";
+    function renderKPI() {
+        const products = getFilteredProducts();
+        if(selectedMonths.length === 0) {
+           updateKPICard('card-qty', 'badge-qty', 0, 0, 'kpi-qty-perc', 'kpi-qty-plan', 'kpi-qty-fact');
+           updateKPICard('card-sum', 'badge-sum', 0, 0, 'kpi-sum-perc', 'kpi-sum-plan', 'kpi-sum-fact');
+           return;
         }
-    }
-
-    // --- Main Table ---
-    function renderTable() {
-        const regionSelect = document.getElementById('regionSelect');
-        const monthSelect = document.getElementById('monthSelect');
-        const groupSelect = document.getElementById('groupSelect');
-        const tableBody = document.getElementById('tableBody');
-
-        const selectedRegion = regionSelect.value;
-        const selectedMonth = monthSelect.value;
-        const selectedGroup = groupSelect.value;
-
-        tableBody.innerHTML = "";
-        if (!selectedMonth) return;
-
-        const filteredProducts = allData.products.filter(p => {
-            const regionMatch = selectedRegion === 'all' || p.region === selectedRegion;
-            const groupMatch = selectedGroup === 'all' || p.group === selectedGroup;
-            return regionMatch && groupMatch;
+        let total = { pq:0, fq:0, ps:0, fs:0 };
+        products.forEach(p => {
+            let agg = aggregateMonths(p, selectedMonths); 
+            total.pq += agg.pq; total.fq += agg.fq; total.ps += agg.ps; total.fs += agg.fs;
         });
+        updateKPICard('card-qty', 'badge-qty', total.pq, total.fq, 'kpi-qty-perc', 'kpi-qty-plan', 'kpi-qty-fact');
+        updateKPICard('card-sum', 'badge-sum', total.ps, total.fs, 'kpi-sum-perc', 'kpi-sum-plan', 'kpi-sum-fact');
+    }
 
-        if (filteredProducts.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Нет данных</td></tr>';
-            return;
+    function updateKPICard(cardId, badgeId, plan, fact, percId, planId, factId) {
+        document.getElementById(planId).innerText = formatNum(plan);
+        document.getElementById(factId).innerText = formatNum(fact);
+        let perc = plan > 0 ? (fact/plan)*100 : 0;
+        document.getElementById(percId).innerText = perc.toFixed(1) + "%";
+        let card = document.getElementById(cardId);
+        let badge = document.getElementById(badgeId);
+        card.className = 'kpi-card'; badge.className='badge';
+        if(perc>=100) { card.classList.add('status-green'); badge.classList.add('badge-green'); badge.innerText="Отлично"; }
+        else if(perc>=50) { card.classList.add('status-orange'); badge.classList.add('badge-orange'); badge.innerText="Норма"; }
+        else { card.classList.add('status-red'); badge.classList.add('badge-red'); badge.innerText="Внимание"; }
+    }
+
+    function renderTable() {
+        const products = getFilteredProducts();
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        if(products.length===0 || selectedMonths.length===0) { 
+            tbody.innerHTML='<tr><td colspan="7" style="text-align:center">Нет данных</td></tr>'; return; 
         }
-
-        filteredProducts.forEach(p => {
-            const sales = p.salesData[selectedMonth];
-            if (!sales) return;
-            if(sales.pl_qty === 0 && sales.fc_qty === 0 && sales.pl_sum === 0 && sales.fc_sum === 0) return; 
-
-            // Используем 6 колонок + 1 название
-            const tr = document.createElement('tr');
-            tr.onclick = function() { openDetailView(p); };
-
+        products.forEach(p => {
+            let agg = aggregateMonths(p, selectedMonths); 
+            if(agg.pq==0 && agg.fq==0 && agg.ps==0) return;
+            let tr = document.createElement('tr');
+            tr.onclick = () => openDetail(p);
+            let pq = agg.pq>0?(agg.fq/agg.pq)*100:0;
+            let ps = agg.ps>0?(agg.fs/agg.ps)*100:0;
             tr.innerHTML = `
                 <td><span class="prod-name">${p.name}</span></td>
-                <td class="num num-light">${formatNum(sales.pl_qty)}</td>
-                <td class="num">${formatNum(sales.fc_qty)}</td>
-                <td class="num">${getBadgeHtml(sales.perc_qty)}</td>
-                <td class="num num-light">${formatNum(sales.pl_sum)}</td>
-                <td class="num">${formatNum(sales.fc_sum)}</td>
-                <td class="num">${getBadgeHtml(sales.perc_sum)}</td>
+                <td class="num num-light">${formatNum(agg.pq)}</td><td class="num">${formatNum(agg.fq)}</td><td class="num">${getBadge(pq)}</td>
+                <td class="num num-light">${formatNum(agg.ps)}</td><td class="num">${formatNum(agg.fs)}</td><td class="num">${getBadge(ps)}</td>
             `;
-            tableBody.appendChild(tr);
+            tbody.appendChild(tr);
         });
     }
 
-    function openDetailView(product) {
-        document.getElementById('dashboard-view').style.display = 'none';
-        document.getElementById('detail-view').style.display = 'block';
-        window.scrollTo(0,0);
+    function renderSummary(isYearSummary = false) {
+        const products = getFilteredProducts();
+        const tbody = document.getElementById('summaryBody');
+        tbody.innerHTML = '';
+        
+        // ВСЕГДА используем ВСЕ месяцы, если isYearSummary (для нижней таблицы)
+        let monthsToShow = isYearSummary ? allData.filters.months : allData.filters.months.filter(m => selectedMonths.includes(m));
+        let grandTotal = { pq:0, fq:0, ps:0, fs:0 };
+        let quarterTotal = { pq:0, fq:0, ps:0, fs:0 }; // Накопитель квартала
 
+        monthsToShow.forEach((m, index) => {
+            let mo = { pq:0, fq:0, ps:0, fs:0 };
+            products.forEach(p => {
+                let s = p.salesData[m];
+                if(s) {
+                    mo.pq+=Number(s.pl_qty)||0; mo.fq+=Number(s.fc_qty)||0;
+                    mo.ps+=Number(s.pl_sum)||0; mo.fs+=Number(s.fc_sum)||0;
+                }
+            });
+            
+            addT(grandTotal, mo);
+            addT(quarterTotal, mo); // Добавляем в квартал
+
+            appendSumRow(tbody, m, mo, '');
+
+            // ЛОГИКА КВАРТАЛОВ: Каждые 3 месяца (индексы 2, 5, 8, 11)
+            // Работает только если показываем полный год
+            if (isYearSummary && (index + 1) % 3 === 0) {
+                let qNum = (index + 1) / 3;
+                appendSumRow(tbody, `ИТОГ КВАРТАЛ ${qNum}`, quarterTotal, 'row-quarter');
+                quarterTotal = { pq:0, fq:0, ps:0, fs:0 }; // Сброс
+            }
+        });
+        
+        if(monthsToShow.length > 1) {
+            appendSumRow(tbody, "ИТОГ ГОД", grandTotal, 'row-year');
+        }
+    }
+
+    function appendSumRow(cont, title, d, rowClass) {
+        let tr = document.createElement('tr');
+        if(rowClass) tr.className = rowClass;
+        
+        let pq = d.pq>0?(d.fq/d.pq)*100:0;
+        let ps = d.ps>0?(d.fs/d.ps)*100:0;
+        
+        tr.innerHTML=`
+            <td>${title}</td>
+            <td class="num num-light">${formatNum(d.pq)}</td><td class="num">${formatNum(d.fq)}</td><td class="num">${getBadge(pq)}</td>
+            <td class="num num-light">${formatNum(d.ps)}</td><td class="num">${formatNum(d.fs)}</td><td class="num">${getBadge(ps)}</td>
+        `;
+        cont.appendChild(tr);
+    }
+
+    function openDetail(product) {
+        document.getElementById('dashboard-view').style.display='none';
+        document.getElementById('detail-view').style.display='block';
+        window.scrollTo(0,0);
         document.getElementById('detail-title').innerText = product.name;
         document.getElementById('detail-subtitle').innerText = `${product.region} / ${product.group}`;
-
-        const tbody = document.getElementById('detailBody');
-        tbody.innerHTML = "";
-
-        allData.filters.months.forEach(month => {
-            const sales = product.salesData[month];
-            if(!sales) return;
-
-            let pq = Number(sales.pl_qty) || 0;
-            let fq = Number(sales.fc_qty) || 0;
-            let ps = Number(sales.pl_sum) || 0;
-            let fs = Number(sales.fc_sum) || 0;
-            let percQ = pq > 0 ? fq/pq : 0;
-            let percS = ps > 0 ? fs/ps : 0;
+        const tbody = document.getElementById('detailBody'); tbody.innerHTML='';
+        
+        // Показываем ВСЕ месяцы в детализации
+        allData.filters.months.forEach(m => {
+            let s = product.salesData[m];
+            if(!s) return;
+            let pq = Number(s.pl_qty)||0, fq = Number(s.fc_qty)||0;
+            let ps = Number(s.pl_sum)||0, fs = Number(s.fc_sum)||0;
+            let ppq = pq>0?(fq/pq)*100:0; let pps = ps>0?(fs/ps)*100:0;
             
-            const tr = document.createElement('tr');
+            let tr = document.createElement('tr');
             tr.innerHTML = `
-                <td>${month}</td>
-                <td class="num num-light">${formatNum(pq)}</td>
-                <td class="num">${formatNum(fq)}</td>
-                <td class="num">${getBadgeHtml(percQ*100)}</td>
-                <td class="num num-light">${formatNum(ps)}</td>
-                <td class="num">${formatNum(fs)}</td>
-                <td class="num">${getBadgeHtml(percS*100)}</td>
+                <td>${m}</td>
+                <td class="num num-light">${formatNum(pq)}</td><td class="num">${formatNum(fq)}</td><td class="num">${getBadge(ppq)}</td>
+                <td class="num num-light">${formatNum(ps)}</td><td class="num">${formatNum(fs)}</td><td class="num">${getBadge(pps)}</td>
             `;
             tbody.appendChild(tr);
         });
     }
 
     function closeDetailView() {
-        document.getElementById('detail-view').style.display = 'none';
-        document.getElementById('dashboard-view').style.display = 'block';
+        document.getElementById('detail-view').style.display='none';
+        document.getElementById('dashboard-view').style.display='block';
     }
 
-    function renderSummary() {
-        const summaryBody = document.getElementById('summaryBody');
-        const selectedRegion = document.getElementById('regionSelect').value;
-        const selectedGroup = document.getElementById('groupSelect').value;
-
-        summaryBody.innerHTML = "";
-
-        const filteredProducts = allData.products.filter(p => {
-            const regionMatch = selectedRegion === 'all' || p.region === selectedRegion;
-            const groupMatch = selectedGroup === 'all' || p.group === selectedGroup;
-            return regionMatch && groupMatch;
-        });
-
-        let yearTotal = { pq: 0, fq: 0, ps: 0, fs: 0 };
-        let quarterTotal = { pq: 0, fq: 0, ps: 0, fs: 0 };
-        
-        allData.filters.months.forEach((month, index) => {
-            let monthTotal = { pq: 0, fq: 0, ps: 0, fs: 0 };
-            filteredProducts.forEach(p => {
-                if (p.salesData[month]) {
-                    monthTotal.pq += Number(p.salesData[month].pl_qty) || 0;
-                    monthTotal.fq += Number(p.salesData[month].fc_qty) || 0;
-                    monthTotal.ps += Number(p.salesData[month].pl_sum) || 0;
-                    monthTotal.fs += Number(p.salesData[month].fc_sum) || 0;
-                }
-            });
-
-            addToTotal(quarterTotal, monthTotal);
-            addToTotal(yearTotal, monthTotal);
-
-            appendSummaryRow(summaryBody, month, monthTotal, false);
-
-            if ((index + 1) % 3 === 0) {
-                let quarterNum = (index + 1) / 3;
-                appendSummaryRow(summaryBody, `Квартал ${quarterNum}`, quarterTotal, false);
-                quarterTotal = { pq: 0, fq: 0, ps: 0, fs: 0 };
-            }
-        });
-        appendSummaryRow(summaryBody, "ИТОГ ГОД", yearTotal, true);
+    function formatNum(n) { return new Intl.NumberFormat('ru-RU').format(Math.round(n)); }
+    function getBadge(v) {
+        let c = 'badge-red';
+        if(v>=100) c='badge-green'; else if(v>=50) c='badge-orange';
+        return `<span class="badge ${c}">${v.toFixed(1)}%</span>`;
     }
+    function addT(t, s) { t.pq+=s.pq; t.fq+=s.fq; t.ps+=s.ps; t.fs+=s.fs; }
 
-    function appendSummaryRow(container, title, data, isYear) {
-        let tr = document.createElement('tr');
-        if(isYear) tr.className = 'row-year';
-        else if(title.includes("Квартал")) tr.style.backgroundColor = "#fcfcfc";
-        
-        let percQ = data.pq > 0 ? (data.fq/data.pq)*100 : 0;
-        let percS = data.ps > 0 ? (data.fs/data.ps)*100 : 0;
-
-        tr.innerHTML = `
-            <td>${title}</td>
-            <td class="num num-light">${formatNum(data.pq)}</td>
-            <td class="num">${formatNum(data.fq)}</td>
-            <td class="num">${getBadgeHtml(percQ)}</td>
-            <td class="num num-light">${formatNum(data.ps)}</td>
-            <td class="num">${formatNum(data.fs)}</td>
-            <td class="num">${getBadgeHtml(percS)}</td>
-        `;
-        container.appendChild(tr);
-    }
-
-    // --- Helpers ---
-    function addToTotal(target, source) {
-        target.pq += source.pq; target.fq += source.fq;
-        target.ps += source.ps; target.fs += source.fs;
-    }
-    function formatNum(num) { return new Intl.NumberFormat('ru-RU').format(Math.round(num)); }
-    function getNormalVal(val) {
-        let v = parseFloat(val);
-        if(v <= 5.0 && v > -5.0 && v !== 0) v = v * 100;
-        return v;
-    }
-    function getBadgeHtml(val) {
-        const v = getNormalVal(val);
-        let colorClass = 'badge-red';
-        if (v >= 100) colorClass = 'badge-green';
-        else if (v >= 50) colorClass = 'badge-orange';
-        return `<span class="badge ${colorClass}">${v.toFixed(1)}%</span>`;
-    }
 </script>
-
 </body>
 </html>
