@@ -28,22 +28,19 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-dark); margin: 0; padding: 0; min-height: 100vh; }
 
-        /* Анимация */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Login Screen */
-        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: white; }
+        /* Login */
+        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: white; z-index: 2000; position: relative; }
         .login-card { width: 100%; max-width: 360px; text-align: center; padding: 20px; }
         .logo { max-height: 60px; margin-bottom: 40px; }
         input { width: 100%; padding: 16px; margin-bottom: 15px; border: 1px solid #e7e7e7; border-radius: 12px; background: #fcfcfc; font-size: 15px; }
         input:focus { border-color: var(--primary); background: #fff; }
-        button { width: 100%; padding: 16px; background-color: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        button:active { transform: scale(0.98); }
-        button:disabled { opacity: 0.7; cursor: not-allowed; }
+        #loginBtn { width: 100%; padding: 16px; background-color: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; }
         #login-error { color: var(--red-text); margin-top: 15px; font-size: 14px; display: none; }
 
-        /* Header */
+        /* App Layout */
         #app-container { display: none; padding-bottom: 60px; }
         .app-header { background: var(--white); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #eff2f7; }
         .header-logo { height: 32px; }
@@ -51,133 +48,85 @@
         .user-name { font-weight: 600; font-size: 14px; }
         .logout-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 600; }
 
-        .content { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .content { max-width: 1100px; margin: 20px auto; padding: 0 20px; }
 
-        /* Filters Styling */
+        /* Filters */
         .filters {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;
-            background: var(--white); padding: 20px; border-radius: var(--radius);
-            box-shadow: var(--shadow); margin-bottom: 30px; border: 1px solid #f1f3f9;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;
+            background: var(--white); padding: 15px; border-radius: var(--radius);
+            box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid #f1f3f9;
         }
-        .filter-group label { display: block; font-size: 11px; color: var(--text-light); margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
-        
-        /* === CUSTOM MULTI-SELECT CSS === */
+        .filter-group label { display: block; font-size: 11px; color: var(--text-light); margin-bottom: 6px; text-transform: uppercase; font-weight: 700; }
+
+        /* Multi-Select Styles */
         .multiselect { position: relative; width: 100%; }
-        .select-btn {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; border: 1px solid #e0e5ee; border-radius: 8px;
-            background: #fff; cursor: pointer; font-size: 14px; font-weight: 500;
-            min-height: 45px;
-        }
-        .select-btn::after {
-            content: ""; width: 6px; height: 6px; border-right: 2px solid #8898aa; border-bottom: 2px solid #8898aa;
-            transform: rotate(45deg); transition: 0.2s; margin-left: 10px;
-        }
+        .select-btn { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 1px solid #e0e5ee; border-radius: 8px; background: #fff; cursor: pointer; font-size: 14px; font-weight: 500; min-height: 42px; }
+        .select-btn::after { content: ""; width: 6px; height: 6px; border-right: 2px solid #8898aa; border-bottom: 2px solid #8898aa; transform: rotate(45deg); margin-left: 10px; transition: 0.2s; }
         .select-btn.open::after { transform: rotate(-135deg); }
-        
-        .list-items {
-            position: absolute; top: 110%; left: 0; width: 100%;
-            background: #fff; border-radius: 8px; padding: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #f1f3f9;
-            display: none; z-index: 200; max-height: 300px; overflow-y: auto;
-        }
+        .list-items { position: absolute; top: 105%; left: 0; width: 100%; background: #fff; border-radius: 8px; padding: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #f1f3f9; display: none; z-index: 200; max-height: 300px; overflow-y: auto; }
         .list-items.show { display: block; }
         
-        /* Исправленный чекбокс */
-        .item {
-            display: flex; align-items: center; height: 40px; cursor: pointer;
-            padding: 0 10px; border-radius: 6px; transition: 0.2s;
-        }
+        .item { display: flex; align-items: center; padding: 8px 10px; cursor: pointer; border-radius: 6px; }
         .item:hover { background-color: #f6f9fc; }
-        .item .checkbox {
-            height: 18px; width: 18px; border-radius: 4px; border: 2px solid #c0c0c0;
-            display: flex; align-items: center; justify-content: center; margin-right: 12px; transition: 0.2s; flex-shrink: 0;
-            font-size: 14px;
-            line-height: 1;
-        }
+        .item .checkbox { height: 16px; width: 16px; border-radius: 4px; border: 2px solid #c0c0c0; display: flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0; font-size: 12px; line-height: 1; color: white; font-weight: 700; }
         .item.checked .checkbox { background-color: var(--primary); border-color: var(--primary); }
-        .item.checked .checkbox::before {
-            content: "✓"; 
-            color: white;
-            font-weight: 700;
-        }
-        .item-text { font-size: 14px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item.checked .checkbox::before { content: "✓"; }
+        .item-text { font-size: 13px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* Стили для тегов выбранных элементов */
-        .selected-tags {
-            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; min-height: 28px;
-        }
-        .selected-tag {
-            display: inline-flex; align-items: center; gap: 6px;
-            background-color: rgba(222, 59, 32, 0.1); color: var(--primary);
-            padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 500;
-            animation: fadeIn 0.2s ease-out;
-        }
-        .selected-tag .tag-remove {
-            cursor: pointer; font-weight: 700; font-size: 14px; line-height: 1;
-            width: 16px; height: 16px; display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; transition: 0.2s;
-        }
-        .selected-tag .tag-remove:hover {
-            background-color: var(--primary); color: white;
-        }
+        /* TAGS (CHIPS) - НОВОЕ */
+        .selected-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .selected-tag { display: inline-flex; align-items: center; background: #fff0ec; color: var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; border: 1px solid rgba(222, 59, 32, 0.2); }
+        .tag-remove { margin-left: 6px; cursor: pointer; font-weight: bold; font-size: 14px; line-height: 1; }
+        .tag-remove:hover { color: #b92b14; }
 
         /* KPI Cards */
-        .kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px; }
-        .kpi-card {
-            background: var(--white); border-radius: var(--radius); padding: 25px; 
-            box-shadow: var(--shadow); border: 1px solid #f1f3f9; position: relative; overflow: hidden;
-            display: flex; flex-direction: column; gap: 20px;
-        }
-        .kpi-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: #e0e5ee; }
+        .kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .kpi-card { background: var(--white); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); border: 1px solid #f1f3f9; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 15px; }
+        .kpi-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: #e0e5ee; }
         .kpi-card.status-green::before { background: var(--green-text); }
         .kpi-card.status-orange::before { background: var(--orange-text); }
         .kpi-card.status-red::before { background: var(--red-text); }
         .kpi-header { display: flex; justify-content: space-between; }
-        .kpi-title { font-size: 13px; color: var(--text-light); text-transform: uppercase; font-weight: 700; }
+        .kpi-title { font-size: 12px; color: var(--text-light); text-transform: uppercase; font-weight: 700; }
         .kpi-main-stat { display: flex; align-items: baseline; gap: 10px; }
-        .kpi-percent-big { font-size: 32px; font-weight: 800; color: var(--text-dark); }
-        .kpi-percent-badge { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
-        .kpi-details { display: flex; gap: 30px; border-top: 1px solid #f1f3f9; padding-top: 15px; }
-        .kpi-sub-label { font-size: 11px; color: var(--text-light); display: block; margin-bottom: 4px; }
-        .kpi-sub-val { font-size: 16px; font-weight: 600; color: var(--text-dark); }
+        .kpi-percent-big { font-size: 28px; font-weight: 800; color: var(--text-dark); }
+        .kpi-percent-badge { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+        .kpi-details { display: flex; gap: 20px; border-top: 1px solid #f1f3f9; padding-top: 12px; }
+        .kpi-sub-label { font-size: 10px; color: var(--text-light); display: block; margin-bottom: 2px; }
+        .kpi-sub-val { font-size: 14px; font-weight: 600; color: var(--text-dark); }
 
-        /* Таблицы */
-        h3 { margin: 40px 0 20px 0; font-weight: 700; font-size: 18px; display: flex; align-items: center; gap: 10px; }
-        h3::before { content: ''; display: block; width: 6px; height: 24px; background: var(--primary); border-radius: 4px; }
-        
+        /* Tables */
+        h3 { margin: 30px 0 15px 0; font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        h3::before { content: ''; display: block; width: 4px; height: 18px; background: var(--primary); border-radius: 4px; }
         .table-wrapper { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow-x: auto; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px; font-size: 14px; }
-        th { padding: 18px 20px; text-align: left; background: #f6f9fc; color: var(--text-light); font-weight: 600; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #eff2f7; }
-        td { padding: 14px 20px; border-bottom: 1px solid #eff2f7; white-space: nowrap; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; font-size: 13px; }
+        th { padding: 14px 16px; text-align: left; background: #f6f9fc; color: var(--text-light); font-weight: 600; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #eff2f7; }
+        td { padding: 12px 16px; border-bottom: 1px solid #eff2f7; white-space: nowrap; }
         tbody tr:hover { background-color: #f8f9fe; cursor: pointer; }
         .num { text-align: right; } .num-light { color: var(--text-light); }
-        
-        .badge { display: inline-block; padding: 4px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; text-align: center; min-width: 55px; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 50px; font-size: 11px; font-weight: 700; text-align: center; min-width: 50px; }
         .badge-green { background-color: var(--green-bg); color: var(--green-text); }
         .badge-orange { background-color: var(--orange-bg); color: var(--orange-text); }
         .badge-red { background-color: var(--red-bg); color: var(--red-text); }
-        
-        /* Стили Итогов */
-        .row-year td { background-color: #e8f5e9; font-weight: 700; border-top: 2px solid #2e7d32; font-size: 15px; color: #1b5e20; }
+        .row-year td { background-color: #e8f5e9; font-weight: 700; border-top: 2px solid #2e7d32; font-size: 14px; color: #1b5e20; }
         .row-quarter td { background-color: #e3f2fd; font-weight: 600; color: #0d47a1; }
 
-        /* Details */
+        /* Detail View */
         #detail-view { display: none; }
-        .detail-header { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
-        .back-btn { align-self: flex-start; background: #fff; border: 1px solid #e7e7e7; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 14px; color: var(--text-dark); font-weight: 600; }
-        .prod-detail-title { font-size: 24px; font-weight: 800; }
-        
-        #loading { text-align: center; padding: 60px; color: var(--text-light); font-weight: 500; }
-        @media (max-width: 600px) { .app-header, .content, .filters { padding: 15px; } }
+        .detail-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .back-btn { background: #fff; border: 1px solid #e7e7e7; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--text-dark); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .back-btn:hover { background: #f1f3f9; }
+        .product-selector-container { flex-grow: 1; max-width: 400px; }
+        .product-select { width: 100%; padding: 12px; border: 1px solid #e0e5ee; border-radius: 8px; font-size: 15px; font-weight: 600; color: var(--text-dark); outline: none; background: white; border-left: 4px solid var(--primary); }
+
+        #loading { text-align: center; padding: 60px; color: var(--text-light); }
+        @media (max-width: 600px) { .app-header, .content, .filters { padding: 15px; } .detail-nav { flex-direction: column-reverse; align-items: stretch; } }
     </style>
 
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('SW Registered'))
-            .catch(err => console.log('SW Registration Failed', err));
+          navigator.serviceWorker.register('sw.js').catch(() => {});
         });
       }
     </script>
@@ -198,9 +147,7 @@
     <header class="app-header">
         <img src="https://belinda.tj/img/main-logo.svg" alt="Belinda" class="header-logo">
         <div class="user-info">
-            <div>
-                <span class="user-name" id="display-username">...</span>
-            </div>
+            <span class="user-name" id="display-username">...</span>
             <button class="logout-btn" onclick="logout()">Выйти</button>
         </div>
     </header>
@@ -208,68 +155,51 @@
     <div class="content fade-in">
         <div id="loading">Загрузка данных...</div>
 
-        <div id="dashboard-view" style="display:none;">
-            <div class="filters">
-                <div class="filter-group">
-                    <label>Регион(ы)</label>
-                    <div class="multiselect" id="region-multiselect">
-                        <div class="select-btn">Все регионы</div>
-                        <div class="list-items"></div>
-                        <div class="selected-tags"></div>
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <label>Группа(ы)</label>
-                    <div class="multiselect" id="group-multiselect">
-                        <div class="select-btn">Все группы</div>
-                        <div class="list-items"></div>
-                        <div class="selected-tags"></div>
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <label>Месяц(ы)</label>
-                    <div class="multiselect" id="month-multiselect">
-                        <div class="select-btn">Выберите месяц</div>
-                        <div class="list-items"></div>
-                        <div class="selected-tags"></div>
-                    </div>
+        <div class="filters" id="global-filters" style="display:none;">
+            <div class="filter-group">
+                <label>Регион(ы)</label>
+                <div class="multiselect" id="region-multiselect">
+                    <div class="select-btn">Все регионы</div>
+                    <div class="list-items"></div>
+                    <div class="selected-tags"></div> </div>
+            </div>
+            <div class="filter-group">
+                <label>Группа(ы)</label>
+                <div class="multiselect" id="group-multiselect">
+                    <div class="select-btn">Все группы</div>
+                    <div class="list-items"></div>
+                    <div class="selected-tags"></div>
                 </div>
             </div>
+            <div class="filter-group">
+                <label>Месяц(ы)</label>
+                <div class="multiselect" id="month-multiselect">
+                    <div class="select-btn">Выберите месяц</div>
+                    <div class="list-items"></div>
+                    <div class="selected-tags"></div>
+                </div>
+            </div>
+        </div>
 
+        <div id="dashboard-view" style="display:none;">
             <div class="kpi-container">
                 <div class="kpi-card" id="card-qty">
                     <div class="kpi-header"><span class="kpi-title">План (Кол)</span></div>
-                    <div class="kpi-main-stat">
-                        <span class="kpi-percent-big" id="kpi-qty-perc">0%</span>
-                        <span class="kpi-percent-badge" id="badge-qty">Вып.</span>
-                    </div>
-                    <div class="kpi-details">
-                        <div><span class="kpi-sub-label">План</span><span class="kpi-sub-val" id="kpi-qty-plan">0</span></div>
-                        <div><span class="kpi-sub-label">Факт</span><span class="kpi-sub-val" id="kpi-qty-fact">0</span></div>
-                    </div>
+                    <div class="kpi-main-stat"><span class="kpi-percent-big" id="kpi-qty-perc">0%</span><span class="kpi-percent-badge" id="badge-qty">Вып.</span></div>
+                    <div class="kpi-details"><div><span class="kpi-sub-label">План</span><span class="kpi-sub-val" id="kpi-qty-plan">0</span></div><div><span class="kpi-sub-label">Факт</span><span class="kpi-sub-val" id="kpi-qty-fact">0</span></div></div>
                 </div>
                 <div class="kpi-card" id="card-sum">
                     <div class="kpi-header"><span class="kpi-title">План (Сум)</span></div>
-                    <div class="kpi-main-stat">
-                        <span class="kpi-percent-big" id="kpi-sum-perc">0%</span>
-                        <span class="kpi-percent-badge" id="badge-sum">Вып.</span>
-                    </div>
-                    <div class="kpi-details">
-                        <div><span class="kpi-sub-label">План</span><span class="kpi-sub-val" id="kpi-sum-plan">0</span></div>
-                        <div><span class="kpi-sub-label">Факт</span><span class="kpi-sub-val" id="kpi-sum-fact">0</span></div>
-                    </div>
+                    <div class="kpi-main-stat"><span class="kpi-percent-big" id="kpi-sum-perc">0%</span><span class="kpi-percent-badge" id="badge-sum">Вып.</span></div>
+                    <div class="kpi-details"><div><span class="kpi-sub-label">План</span><span class="kpi-sub-val" id="kpi-sum-plan">0</span></div><div><span class="kpi-sub-label">Факт</span><span class="kpi-sub-val" id="kpi-sum-fact">0</span></div></div>
                 </div>
             </div>
 
-            <h3>Детализация по препаратам</h3>
+            <h3>Продажи по препаратам (Суммарно)</h3>
             <div class="table-wrapper">
                 <table id="salesTable">
                     <thead>
-                        <tr>
-                            <th>Препарат</th>
-                            <th class="num">Пл кол</th><th class="num">Фк кол</th><th class="num">% кол</th>
-                            <th class="num">Пл Сум</th><th class="num">Фк Сум</th><th class="num">% сум</th>
-                        </tr>
+                        <tr><th>Препарат</th><th class="num">Пл кол</th><th class="num">Фк кол</th><th class="num">%</th><th class="num">Пл Сум</th><th class="num">Фк Сум</th><th class="num">%</th></tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
                 </table>
@@ -279,11 +209,7 @@
             <div class="table-wrapper">
                 <table id="summaryTable">
                     <thead>
-                        <tr>
-                            <th>Период</th>
-                            <th class="num">Пл кол</th><th class="num">Фк кол</th><th class="num">% кол</th>
-                            <th class="num">Пл Сум</th><th class="num">Фк Сум</th><th class="num">% сум</th>
-                        </tr>
+                        <tr><th>Период</th><th class="num">Пл кол</th><th class="num">Фк кол</th><th class="num">%</th><th class="num">Пл Сум</th><th class="num">Фк Сум</th><th class="num">%</th></tr>
                     </thead>
                     <tbody id="summaryBody"></tbody>
                 </table>
@@ -291,21 +217,18 @@
         </div>
 
         <div id="detail-view">
-            <div class="detail-header">
-                <button class="back-btn" onclick="closeDetailView()">← Назад к таблице</button>
-                <div>
-                    <div class="prod-detail-title" id="detail-title">Title</div>
-                    <div class="prod-detail-sub" id="detail-subtitle">Subtitle</div>
+            <div class="detail-nav">
+                <button class="back-btn" onclick="closeDetailView()">← Назад</button>
+                <div class="product-selector-container">
+                    <select id="productSelector" class="product-select"></select>
                 </div>
             </div>
+            
+            <h3>Динамика продаж (По выбранным регионам)</h3>
             <div class="table-wrapper">
                 <table id="detailTable">
                     <thead>
-                        <tr>
-                            <th>Месяц</th>
-                            <th class="num">Пл кол</th><th class="num">Фк кол</th><th class="num">% кол</th>
-                            <th class="num">Пл Сум</th><th class="num">Фк Сум</th><th class="num">% сум</th>
-                        </tr>
+                        <tr><th>Месяц</th><th class="num">Пл кол</th><th class="num">Фк кол</th><th class="num">%</th><th class="num">Пл Сум</th><th class="num">Фк Сум</th><th class="num">%</th></tr>
                     </thead>
                     <tbody id="detailBody"></tbody>
                 </table>
@@ -315,15 +238,16 @@
 </div>
 
 <script>
-    // === ССЫЛКА НА ВАШ APPS SCRIPT ===
+    // === ВАШ APPS SCRIPT ===
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtCJ-DCoAY3uxTj2AayUpwqPxNzwYECySI3ag4vFy_XXH6kcYkeLJAiyXdcsA9D5jRLA/exec"; 
-    // ==================================
+    // ======================
 
     let allData = {};
     let currentUser = null; 
     let selectedRegions = [];
     let selectedGroups = [];
     let selectedMonths = []; 
+    let currentDetailProduct = null;
 
     window.onload = function() {
         const savedUser = localStorage.getItem('belindaUser');
@@ -344,11 +268,8 @@
         const errorDiv = document.getElementById('login-error');
         const loginBtn = document.getElementById('loginBtn');
 
-        if (!loginInput || !passInput) { errorDiv.innerText = "Введите логин и пароль"; errorDiv.style.display='block'; return; }
-        
-        errorDiv.style.display='none'; 
-        loginBtn.innerText="Вход..."; 
-        loginBtn.disabled=true;
+        if (!loginInput || !passInput) { errorDiv.innerText = "Введите данные"; errorDiv.style.display='block'; return; }
+        errorDiv.style.display='none'; loginBtn.innerText="Вход..."; loginBtn.disabled=true;
 
         fetch(`${SCRIPT_URL}?action=login&login=${encodeURIComponent(loginInput)}&password=${encodeURIComponent(passInput)}`)
             .then(r => r.json())
@@ -360,20 +281,12 @@
                     localStorage.setItem('belindaUser', JSON.stringify(currentUser));
                     document.getElementById('display-username').innerText = currentUser.login;
                     showApp();
-                } else {
-                    errorDiv.innerText = data.message || "Ошибка входа"; errorDiv.style.display='block';
-                }
+                } else { errorDiv.innerText = data.message || "Ошибка входа"; errorDiv.style.display='block'; }
             })
-            .catch(e => { 
-                loginBtn.innerText="Войти"; loginBtn.disabled=false;
-                errorDiv.innerText="Ошибка сети. Проверьте интернет."; errorDiv.style.display='block'; 
-                console.error(e);
-            });
+            .catch(e => { loginBtn.innerText="Войти"; loginBtn.disabled=false; errorDiv.innerText="Ошибка сети"; errorDiv.style.display='block'; });
     }
 
-    function logout() {
-        if(confirm("Выйти?")) { localStorage.removeItem('belindaUser'); location.reload(); }
-    }
+    function logout() { if(confirm("Выйти?")) { localStorage.removeItem('belindaUser'); location.reload(); } }
     
     function showApp() {
         document.getElementById('login-screen').style.display = 'none';
@@ -388,50 +301,28 @@
                 allData = data;
                 initApp();
                 document.getElementById('loading').style.display='none';
+                document.getElementById('global-filters').style.display='grid';
                 document.getElementById('dashboard-view').style.display='block';
                 document.getElementById('dashboard-view').classList.add('fade-in');
             })
-            .catch(e => {
-                document.getElementById('loading').innerHTML = "Ошибка загрузки. Обновите страницу.";
-            });
+            .catch(e => { document.getElementById('loading').innerHTML = "Ошибка загрузки данных"; });
     }
 
     function initApp() {
-        // Регионы
         let allowedRegions = [];
         let uReg = currentUser.region || "";
-        if (!uReg || uReg.toLowerCase().includes('админ')) {
-            allowedRegions = allData.filters.regions;
-        } else {
-            let userRegs = uReg.split(',').map(s => s.trim());
-            allowedRegions = allData.filters.regions.filter(r => userRegs.includes(r));
-        }
-        setupMultiSelect('region-multiselect', allowedRegions, (selected) => {
-            selectedRegions = selected;
-            updateAll();
-        }, true); 
+        if (!uReg || uReg.toLowerCase().includes('админ')) { allowedRegions = allData.filters.regions; } 
+        else { let userRegs = uReg.split(',').map(s => s.trim()); allowedRegions = allData.filters.regions.filter(r => userRegs.includes(r)); }
+        setupMultiSelect('region-multiselect', allowedRegions, (selected) => { selectedRegions = selected; updateAll(); }, true); 
 
-        // Группы
         let allowedGroups = [];
         let uGrp = currentUser.group || "";
-        if (!uGrp || uGrp.toLowerCase().includes('админ')) {
-            allowedGroups = allData.filters.groups;
-        } else {
-            let userGrps = uGrp.split(',').map(s => s.trim());
-            allowedGroups = allData.filters.groups.filter(g => userGrps.includes(g));
-        }
-        setupMultiSelect('group-multiselect', allowedGroups, (selected) => {
-            selectedGroups = selected;
-            updateAll();
-        }, true);
+        if (!uGrp || uGrp.toLowerCase().includes('админ')) { allowedGroups = allData.filters.groups; } 
+        else { let userGrps = uGrp.split(',').map(s => s.trim()); allowedGroups = allData.filters.groups.filter(g => userGrps.includes(g)); }
+        setupMultiSelect('group-multiselect', allowedGroups, (selected) => { selectedGroups = selected; updateAll(); }, true);
 
-        // Месяцы
-        setupMultiSelect('month-multiselect', allData.filters.months, (selected) => {
-            selectedMonths = selected;
-            updateAll();
-        }, false); 
+        setupMultiSelect('month-multiselect', allData.filters.months, (selected) => { selectedMonths = selected; updateAll(); }, false); 
         
-        // Авто-выбор первого месяца
         if(allData.filters.months.length > 0) {
             setTimeout(() => {
                 const mContainer = document.getElementById('month-multiselect');
@@ -439,158 +330,49 @@
                 if(items.length > 1) items[1].click(); 
             }, 100);
         }
-    }
 
-    // --- Мульти-селект (с исправлениями Юникода) ---
-    function setupMultiSelect(containerId, optionsList, onChangeCallback, selectAllByDefault) {
-        const container = document.getElementById(containerId);
-        if(!container) return;
-        const btn = container.querySelector('.select-btn');
-        const list = container.querySelector('.list-items');
-        const tagsContainer = container.querySelector('.selected-tags');
-        list.innerHTML = '';
-        if(tagsContainer) tagsContainer.innerHTML = '';
-        
-        let allItem = document.createElement('div');
-        allItem.className = 'item'; 
-        allItem.innerHTML = `<span class="checkbox"></span><span class="item-text">Выбрать все</span>`;
-        allItem.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isChecked = allItem.classList.contains('checked');
-            if(isChecked) {
-                allItem.classList.remove('checked');
-                list.querySelectorAll('.item:not(:first-child)').forEach(el => el.classList.remove('checked'));
-            } else {
-                allItem.classList.add('checked');
-                list.querySelectorAll('.item:not(:first-child)').forEach(el => el.classList.add('checked'));
-            }
-            updateBtnText();
-        });
-        list.appendChild(allItem);
-
-        optionsList.forEach(opt => {
-            let item = document.createElement('div');
-            item.className = 'item'; 
-            item.dataset.value = opt;
-            item.innerHTML = `<span class="checkbox"></span><span class="item-text">${opt}</span>`;
-            item.addEventListener('click', (e) => {
-                e.stopPropagation();
-                item.classList.toggle('checked');
-                if(!item.classList.contains('checked')) allItem.classList.remove('checked');
-                const allOpts = list.querySelectorAll('.item:not(:first-child)');
-                const allChecked = list.querySelectorAll('.item.checked:not(:first-child)');
-                if(allOpts.length === allChecked.length && allOpts.length > 0) allItem.classList.add('checked');
-                updateBtnText();
-            });
-            list.appendChild(item);
-        });
-
-        if(selectAllByDefault && optionsList.length > 0) { 
-            allItem.classList.add('checked');
-            list.querySelectorAll('.item').forEach(el => el.classList.add('checked'));
-            updateBtnText();
-        } else {
-            updateBtnText();
-        }
-
-        function updateBtnText() {
-            const checkedItems = Array.from(list.querySelectorAll('.item.checked:not(:first-child)'));
-            const values = checkedItems.map(el => el.dataset.value);
-            
-            // Обновление текста кнопки
-            if(checkedItems.length === 0) {
-                btn.innerText = "Выберите...";
-            } else if(checkedItems.length === 1) {
-                // Один элемент - показываем его название
-                btn.innerText = values[0];
-            } else if (checkedItems.length === optionsList.length && optionsList.length > 0) {
-                btn.innerText = "Все выбраны";
-            } else {
-                // Несколько, но не все - показываем количество или названия
-                if (checkedItems.length <= 2) btn.innerText = values.join(', ');
-                else btn.innerText = `Выбрано (${checkedItems.length})`;
-            }
-            
-            // Обновление тегов выбранных элементов
-            if(tagsContainer) {
-                tagsContainer.innerHTML = '';
-                
-                if(checkedItems.length === 0) {
-                    // Ничего не выбрано - не показываем теги
-                } else if(checkedItems.length === optionsList.length && optionsList.length > 0) {
-                    // Все выбраны - показываем один тег "Все выбраны"
-                    const tag = document.createElement('span');
-                    tag.className = 'selected-tag';
-                    tag.innerHTML = `<span>Все выбраны</span><span class="tag-remove" data-action="clear-all">×</span>`;
-                    
-                    // Обработчик удаления - снимает все выбранные
-                    tag.querySelector('.tag-remove').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        list.querySelectorAll('.item').forEach(el => el.classList.remove('checked'));
-                        updateBtnText();
-                    });
-                    
-                    tagsContainer.appendChild(tag);
-                } else {
-                    // Показываем выбранные элементы (один или несколько)
-                    values.forEach(val => {
-                        const tag = document.createElement('span');
-                        tag.className = 'selected-tag';
-                        tag.innerHTML = `<span>${val}</span><span class="tag-remove" data-value="${val}">×</span>`;
-                        
-                        // Обработчик удаления по клику на ×
-                        tag.querySelector('.tag-remove').addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            const itemToUncheck = list.querySelector(`.item[data-value="${val}"]`);
-                            if(itemToUncheck) {
-                                itemToUncheck.classList.remove('checked');
-                                allItem.classList.remove('checked');
-                                updateBtnText();
-                            }
-                        });
-                        
-                        tagsContainer.appendChild(tag);
-                    });
-                }
-            }
-            
-            onChangeCallback(values);
-        }
-
-        const newBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(newBtn, btn);
-        
-        newBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.multiselect .select-btn').forEach(b => {
-                if(b !== newBtn) { b.classList.remove('open'); b.nextElementSibling.classList.remove('show'); }
-            });
-            newBtn.classList.toggle('open');
-            list.classList.toggle('show');
+        document.getElementById('productSelector').addEventListener('change', (e) => {
+            renderDetailTable(e.target.value);
         });
     }
-    
-    window.addEventListener('click', (e) => {
-        document.querySelectorAll('.multiselect').forEach(ms => {
-            if (!ms.contains(e.target)) {
-                ms.querySelector('.select-btn').classList.remove('open');
-                ms.querySelector('.list-items').classList.remove('show');
-            }
-        });
-    });
 
-    function updateAll() {
-        renderKPI();
-        renderTable();
-        renderSummary(true); 
-    }
-
-    function getFilteredProducts() {
-        return allData.products.filter(p => {
+    // --- Core Logic ---
+    function getAggregatedProducts() {
+        let filtered = allData.products.filter(p => {
             const regionMatch = selectedRegions.includes(p.region);
             const groupMatch = selectedGroups.includes(p.group);
             return regionMatch && groupMatch;
         });
+
+        let grouped = {};
+        filtered.forEach(p => {
+            if (!grouped[p.name]) {
+                grouped[p.name] = { name: p.name, salesData: {} };
+                allData.filters.months.forEach(m => {
+                    grouped[p.name].salesData[m] = { pl_qty:0, fc_qty:0, pl_sum:0, fc_sum:0 };
+                });
+            }
+            allData.filters.months.forEach(m => {
+                let s = p.salesData[m];
+                if(s) {
+                    grouped[p.name].salesData[m].pl_qty += Number(s.pl_qty)||0;
+                    grouped[p.name].salesData[m].fc_qty += Number(s.fc_qty)||0;
+                    grouped[p.name].salesData[m].pl_sum += Number(s.pl_sum)||0;
+                    grouped[p.name].salesData[m].fc_sum += Number(s.fc_sum)||0;
+                }
+            });
+        });
+        return Object.values(grouped);
+    }
+
+    function updateAll() {
+        const aggregatedProducts = getAggregatedProducts();
+        renderKPI(aggregatedProducts);
+        renderTable(aggregatedProducts);
+        renderSummary(aggregatedProducts, true);
+        if(document.getElementById('detail-view').style.display === 'block' && currentDetailProduct) {
+            renderDetailTable(currentDetailProduct);
+        }
     }
 
     function aggregateMonths(product, monthsToAggregate) {
@@ -598,16 +380,13 @@
         if (!monthsToAggregate || monthsToAggregate.length === 0) return t;
         monthsToAggregate.forEach(m => {
             let s = product.salesData[m];
-            if(s) {
-                t.pq += Number(s.pl_qty)||0; t.fq += Number(s.fc_qty)||0;
-                t.ps += Number(s.pl_sum)||0; t.fs += Number(s.fc_sum)||0;
-            }
+            if(s) { t.pq += s.pl_qty; t.fq += s.fc_qty; t.ps += s.pl_sum; t.fs += s.fc_sum; }
         });
         return t;
     }
 
-    function renderKPI() {
-        const products = getFilteredProducts();
+    // --- Render Functions ---
+    function renderKPI(products) {
         if(!selectedMonths || selectedMonths.length === 0) {
            updateKPICard('card-qty', 'badge-qty', 0, 0, 'kpi-qty-perc', 'kpi-qty-plan', 'kpi-qty-fact');
            updateKPICard('card-sum', 'badge-sum', 0, 0, 'kpi-sum-perc', 'kpi-sum-plan', 'kpi-sum-fact');
@@ -635,34 +414,27 @@
         else { card.classList.add('status-red'); badge.classList.add('badge-red'); badge.innerText="Внимание"; }
     }
 
-    function renderTable() {
-        const products = getFilteredProducts();
+    function renderTable(products) {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
         if(products.length===0 || !selectedMonths || selectedMonths.length===0) { 
-            tbody.innerHTML='<tr><td colspan="7" style="text-align:center; padding: 20px; color: #888;">Нет данных</td></tr>'; return; 
+            tbody.innerHTML='<tr><td colspan="7" style="text-align:center; padding: 20px;">Нет данных</td></tr>'; return; 
         }
         products.forEach(p => {
             let agg = aggregateMonths(p, selectedMonths); 
             if(agg.pq==0 && agg.fq==0 && agg.ps==0) return;
             let tr = document.createElement('tr');
-            tr.onclick = () => openDetail(p);
+            tr.onclick = () => openDetail(p.name);
             let pq = agg.pq>0?(agg.fq/agg.pq)*100:0;
             let ps = agg.ps>0?(agg.fs/agg.ps)*100:0;
-            tr.innerHTML = `
-                <td><span class="prod-name">${p.name}</span></td>
-                <td class="num num-light">${formatNum(agg.pq)}</td><td class="num">${formatNum(agg.fq)}</td><td class="num">${getBadge(pq)}</td>
-                <td class="num num-light">${formatNum(agg.ps)}</td><td class="num">${formatNum(agg.fs)}</td><td class="num">${getBadge(ps)}</td>
-            `;
+            tr.innerHTML = `<td><span class="prod-name">${p.name}</span></td><td class="num num-light">${formatNum(agg.pq)}</td><td class="num">${formatNum(agg.fq)}</td><td class="num">${getBadge(pq)}</td><td class="num num-light">${formatNum(agg.ps)}</td><td class="num">${formatNum(agg.fs)}</td><td class="num">${getBadge(ps)}</td>`;
             tbody.appendChild(tr);
         });
     }
 
-    function renderSummary(isYearSummary = false) {
-        const products = getFilteredProducts();
+    function renderSummary(products, isYearSummary) {
         const tbody = document.getElementById('summaryBody');
         tbody.innerHTML = '';
-        
         let monthsToShow = isYearSummary ? allData.filters.months : allData.filters.months.filter(m => selectedMonths.includes(m));
         let grandTotal = { pq:0, fq:0, ps:0, fs:0 };
         let quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
@@ -671,77 +443,185 @@
             let mo = { pq:0, fq:0, ps:0, fs:0 };
             products.forEach(p => {
                 let s = p.salesData[m];
-                if(s) {
-                    mo.pq+=Number(s.pl_qty)||0; mo.fq+=Number(s.fc_qty)||0;
-                    mo.ps+=Number(s.pl_sum)||0; mo.fs+=Number(s.fc_sum)||0;
-                }
+                if(s) { mo.pq+=s.pl_qty; mo.fq+=s.fc_qty; mo.ps+=s.pl_sum; mo.fs+=s.fc_sum; }
             });
-            addT(grandTotal, mo);
-            addT(quarterTotal, mo);
+            addT(grandTotal, mo); addT(quarterTotal, mo);
             appendSumRow(tbody, m, mo, '');
-
             if (isYearSummary && (index + 1) % 3 === 0) {
-                let qNum = (index + 1) / 3;
-                appendSumRow(tbody, `ИТОГ КВАРТАЛ ${qNum}`, quarterTotal, 'row-quarter');
+                appendSumRow(tbody, `ИТОГ КВАРТАЛ ${(index + 1) / 3}`, quarterTotal, 'row-quarter');
                 quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
             }
         });
-        
-        if(monthsToShow.length > 1) {
-            appendSumRow(tbody, "ИТОГ ГОД", grandTotal, 'row-year');
-        }
+        if(monthsToShow.length > 1) appendSumRow(tbody, "ИТОГ ГОД", grandTotal, 'row-year');
     }
 
     function appendSumRow(cont, title, d, rowClass) {
         let tr = document.createElement('tr');
         if(rowClass) tr.className = rowClass;
-        let pq = d.pq>0?(d.fq/d.pq)*100:0;
-        let ps = d.ps>0?(d.fs/d.ps)*100:0;
-        tr.innerHTML=`
-            <td>${title}</td>
-            <td class="num num-light">${formatNum(d.pq)}</td><td class="num">${formatNum(d.fq)}</td><td class="num">${getBadge(pq)}</td>
-            <td class="num num-light">${formatNum(d.ps)}</td><td class="num">${formatNum(d.fs)}</td><td class="num">${getBadge(ps)}</td>
-        `;
+        let pq = d.pq>0?(d.fq/d.pq)*100:0; let ps = d.ps>0?(d.fs/d.ps)*100:0;
+        tr.innerHTML=`<td>${title}</td><td class="num num-light">${formatNum(d.pq)}</td><td class="num">${formatNum(d.fq)}</td><td class="num">${getBadge(pq)}</td><td class="num num-light">${formatNum(d.ps)}</td><td class="num">${formatNum(d.fs)}</td><td class="num">${getBadge(ps)}</td>`;
         cont.appendChild(tr);
     }
 
-    function openDetail(product) {
+    // --- Detail View (Now with Quarters) ---
+    function openDetail(productName) {
+        currentDetailProduct = productName;
         document.getElementById('dashboard-view').style.display='none';
         document.getElementById('detail-view').style.display='block';
         window.scrollTo(0,0);
-        document.getElementById('detail-title').innerText = product.name;
-        document.getElementById('detail-subtitle').innerText = `${product.region} / ${product.group}`;
-        const tbody = document.getElementById('detailBody'); tbody.innerHTML='';
-        
-        allData.filters.months.forEach(m => {
-            let s = product.salesData[m];
-            if(!s) return;
-            let pq = Number(s.pl_qty)||0, fq = Number(s.fc_qty)||0;
-            let ps = Number(s.pl_sum)||0, fs = Number(s.fc_sum)||0;
-            let ppq = pq>0?(fq/pq)*100:0; let pps = ps>0?(fs/ps)*100:0;
-            let tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${m}</td>
-                <td class="num num-light">${formatNum(pq)}</td><td class="num">${formatNum(fq)}</td><td class="num">${getBadge(ppq)}</td>
-                <td class="num num-light">${formatNum(ps)}</td><td class="num">${formatNum(fs)}</td><td class="num">${getBadge(pps)}</td>
-            `;
-            tbody.appendChild(tr);
+
+        const selector = document.getElementById('productSelector');
+        selector.innerHTML = '';
+        const aggregatedProducts = getAggregatedProducts();
+        aggregatedProducts.forEach(p => {
+            let opt = document.createElement('option');
+            opt.value = p.name; opt.innerText = p.name;
+            if(p.name === productName) opt.selected = true;
+            selector.appendChild(opt);
         });
+        renderDetailTable(productName);
+    }
+
+    function renderDetailTable(productName) {
+        currentDetailProduct = productName;
+        const products = getAggregatedProducts();
+        const product = products.find(p => p.name === productName);
+        const tbody = document.getElementById('detailBody'); 
+        tbody.innerHTML='';
+        if(!product) return;
+
+        let grandTotal = { pq:0, fq:0, ps:0, fs:0 };
+        let quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
+
+        allData.filters.months.forEach((m, index) => {
+            let s = product.salesData[m];
+            let mo = { pq:s.pl_qty, fq:s.fc_qty, ps:s.pl_sum, fs:s.fc_sum };
+            
+            addT(grandTotal, mo); addT(quarterTotal, mo);
+            appendSumRow(tbody, m, mo, '');
+
+            if ((index + 1) % 3 === 0) {
+                appendSumRow(tbody, `ИТОГ КВАРТАЛ ${(index + 1) / 3}`, quarterTotal, 'row-quarter');
+                quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
+            }
+        });
+        appendSumRow(tbody, "ИТОГ ГОД", grandTotal, 'row-year');
     }
 
     function closeDetailView() {
         document.getElementById('detail-view').style.display='none';
         document.getElementById('dashboard-view').style.display='block';
+        currentDetailProduct = null;
     }
+
+    // --- Multi-Select Helper (With Tags) ---
+    function setupMultiSelect(containerId, optionsList, onChangeCallback, selectAllByDefault) {
+        const container = document.getElementById(containerId);
+        if(!container) return;
+        const btn = container.querySelector('.select-btn');
+        const list = container.querySelector('.list-items');
+        const tagsContainer = container.querySelector('.selected-tags'); // Container for chips
+        list.innerHTML = '';
+        if(tagsContainer) tagsContainer.innerHTML = '';
+        
+        let allItem = document.createElement('div');
+        allItem.className = 'item'; 
+        allItem.innerHTML = `<span class="checkbox"></span><span class="item-text">Выбрать все</span>`;
+        allItem.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isChecked = allItem.classList.contains('checked');
+            if(isChecked) {
+                allItem.classList.remove('checked');
+                list.querySelectorAll('.item:not(:first-child)').forEach(el => el.classList.remove('checked'));
+            } else {
+                allItem.classList.add('checked');
+                list.querySelectorAll('.item:not(:first-child)').forEach(el => el.classList.add('checked'));
+            }
+            updateUI();
+        });
+        list.appendChild(allItem);
+
+        optionsList.forEach(opt => {
+            let item = document.createElement('div');
+            item.className = 'item'; item.dataset.value = opt;
+            item.innerHTML = `<span class="checkbox"></span><span class="item-text">${opt}</span>`;
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                item.classList.toggle('checked');
+                if(!item.classList.contains('checked')) allItem.classList.remove('checked');
+                const allOpts = list.querySelectorAll('.item:not(:first-child)');
+                const allChecked = list.querySelectorAll('.item.checked:not(:first-child)');
+                if(allOpts.length === allChecked.length && allOpts.length > 0) allItem.classList.add('checked');
+                updateUI();
+            });
+            list.appendChild(item);
+        });
+
+        if(selectAllByDefault && optionsList.length > 0) { 
+            allItem.classList.add('checked');
+            list.querySelectorAll('.item').forEach(el => el.classList.add('checked'));
+            updateUI();
+        } else { updateUI(); }
+
+        function updateUI() {
+            const checkedItems = Array.from(list.querySelectorAll('.item.checked:not(:first-child)'));
+            const values = checkedItems.map(el => el.dataset.value);
+            
+            // Text Update
+            if(checkedItems.length === 0) btn.innerText = "Выберите...";
+            else if (checkedItems.length === optionsList.length && optionsList.length > 0) btn.innerText = "Все выбраны";
+            else btn.innerText = `Выбрано (${checkedItems.length})`;
+
+            // Tags Update
+            if(tagsContainer) {
+                tagsContainer.innerHTML = '';
+                if(checkedItems.length > 0) {
+                    if (checkedItems.length === optionsList.length) {
+                        renderTag("Все выбраны", () => allItem.click());
+                    } else {
+                        values.forEach(val => renderTag(val, () => {
+                            const item = list.querySelector(`.item[data-value="${val}"]`);
+                            if(item) item.click();
+                        }));
+                    }
+                }
+            }
+            onChangeCallback(values);
+        }
+
+        function renderTag(text, onRemove) {
+            const tag = document.createElement('span');
+            tag.className = 'selected-tag';
+            tag.innerHTML = `<span>${text}</span><span class="tag-remove">×</span>`;
+            tag.querySelector('.tag-remove').addEventListener('click', (e) => {
+                e.stopPropagation();
+                onRemove();
+            });
+            tagsContainer.appendChild(tag);
+        }
+
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        newBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.multiselect .select-btn').forEach(b => { if(b !== newBtn) { b.classList.remove('open'); b.nextElementSibling.classList.remove('show'); } });
+            newBtn.classList.toggle('open');
+            list.classList.toggle('show');
+        });
+    }
+    
+    window.addEventListener('click', (e) => {
+        document.querySelectorAll('.multiselect').forEach(ms => {
+            if (!ms.contains(e.target)) {
+                ms.querySelector('.select-btn').classList.remove('open');
+                ms.querySelector('.list-items').classList.remove('show');
+            }
+        });
+    });
 
     function formatNum(n) { return new Intl.NumberFormat('ru-RU').format(Math.round(n)); }
-    function getBadge(v) {
-        let c = 'badge-red';
-        if(v>=100) c='badge-green'; else if(v>=50) c='badge-orange';
-        return `<span class="badge ${c}">${v.toFixed(1)}%</span>`;
-    }
+    function getBadge(v) { let c = 'badge-red'; if(v>=100) c='badge-green'; else if(v>=50) c='badge-orange'; return `<span class="badge ${c}">${v.toFixed(1)}%</span>`; }
     function addT(t, s) { t.pq+=s.pq; t.fq+=s.fq; t.ps+=s.ps; t.fs+=s.fs; }
-
 </script>
 </body>
 </html>
