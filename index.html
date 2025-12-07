@@ -32,32 +32,28 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.4s ease-out forwards; }
 
-        /* Экран входа */
+        /* Login Screen */
         #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: white; }
         .login-card { width: 100%; max-width: 360px; text-align: center; padding: 20px; }
         .logo { max-height: 60px; margin-bottom: 40px; }
         input { width: 100%; padding: 16px; margin-bottom: 15px; border: 1px solid #e7e7e7; border-radius: 12px; background: #fcfcfc; font-size: 15px; }
         input:focus { border-color: var(--primary); background: #fff; }
-        
-        /* Кнопка Войти (Красная) */
-        #loginBtn { width: 100%; padding: 16px; background-color: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        #loginBtn:disabled { opacity: 0.7; }
-        
+        button { width: 100%; padding: 16px; background-color: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
         #login-error { color: var(--red-text); margin-top: 15px; font-size: 14px; display: none; }
 
-        /* Основное приложение */
+        /* Header */
         #app-container { display: none; padding-bottom: 60px; }
         .app-header { background: var(--white); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #eff2f7; }
         .header-logo { height: 32px; }
         .user-info { display: flex; align-items: center; gap: 15px; }
         .user-name { font-weight: 600; font-size: 14px; }
-        
-        /* Кнопка Выйти (Красная) */
         .logout-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 600; }
 
         .content { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
 
-        /* Фильтры */
+        /* Filters Styling */
         .filters {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;
             background: var(--white); padding: 20px; border-radius: var(--radius);
@@ -65,7 +61,7 @@
         }
         .filter-group label { display: block; font-size: 11px; color: var(--text-light); margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
         
-        /* Мульти-селект */
+        /* === CUSTOM MULTI-SELECT CSS === */
         .multiselect { position: relative; width: 100%; }
         .select-btn {
             display: flex; justify-content: space-between; align-items: center;
@@ -87,6 +83,7 @@
         }
         .list-items.show { display: block; }
         
+        /* Исправленный чекбокс */
         .item {
             display: flex; align-items: center; height: 40px; cursor: pointer;
             padding: 0 10px; border-radius: 6px; transition: 0.2s;
@@ -95,11 +92,14 @@
         .item .checkbox {
             height: 18px; width: 18px; border-radius: 4px; border: 2px solid #c0c0c0;
             display: flex; align-items: center; justify-content: center; margin-right: 12px; transition: 0.2s; flex-shrink: 0;
+            font-size: 14px;
+            line-height: 1;
         }
         .item.checked .checkbox { background-color: var(--primary); border-color: var(--primary); }
         .item.checked .checkbox::before {
-            content: ""; height: 10px; width: 5px; border-bottom: 2px solid #fff; border-right: 2px solid #fff;
-            transform: rotate(45deg); margin-bottom: 2px;
+            content: "✓"; 
+            color: white;
+            font-weight: 700;
         }
         .item-text { font-size: 14px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -143,26 +143,22 @@
         .row-year td { background-color: #e8f5e9; font-weight: 700; border-top: 2px solid #2e7d32; font-size: 15px; color: #1b5e20; }
         .row-quarter td { background-color: #e3f2fd; font-weight: 600; color: #0d47a1; }
 
-        /* Детализация */
+        /* Details */
         #detail-view { display: none; }
         .detail-header { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
-        
-        /* Кнопка Назад (Белая) */
         .back-btn { align-self: flex-start; background: #fff; border: 1px solid #e7e7e7; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 14px; color: var(--text-dark); font-weight: 600; }
-        
         .prod-detail-title { font-size: 24px; font-weight: 800; }
         
-        #loading { text-align: center; padding: 60px; color: var(--text-light); }
+        #loading { text-align: center; padding: 60px; color: var(--text-light); font-weight: 500; }
         @media (max-width: 600px) { .app-header, .content, .filters { padding: 15px; } }
     </style>
 
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          // Пытаемся зарегистрировать, но не ломаем сайт если не выйдет (например на локалке)
           navigator.serviceWorker.register('sw.js')
             .then(reg => console.log('SW Registered'))
-            .catch(err => console.log('SW Not Registered (Localhost or HTTPS required)', err));
+            .catch(err => console.log('SW Registration Failed', err));
         });
       }
     </script>
@@ -297,9 +293,9 @@
 </div>
 
 <script>
-    // === ВАЖНО: ССЫЛКА НА ВАШ APPS SCRIPT ===
+    // === ССЫЛКА НА ВАШ APPS SCRIPT ===
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnXMQaEyAI2E3J4uK7mYQN97mwWnUv6wwwgM2EUIdhv8gR9WcLqT0946wb_logjkShpw/exec"; 
-    // ==========================================
+    // ==================================
 
     let allData = {};
     let currentUser = null; 
@@ -320,16 +316,13 @@
         }
     };
 
-    // ФУНКЦИЯ ВХОДА (Исправлена привязка)
     function performLogin() {
         const loginInput = document.getElementById('loginUser').value.trim();
         const passInput = document.getElementById('loginPass').value.trim();
         const errorDiv = document.getElementById('login-error');
         const loginBtn = document.getElementById('loginBtn');
 
-        if (!loginInput || !passInput) { 
-            errorDiv.innerText = "Введите логин и пароль"; errorDiv.style.display='block'; return; 
-        }
+        if (!loginInput || !passInput) { errorDiv.innerText = "Введите логин и пароль"; errorDiv.style.display='block'; return; }
         
         errorDiv.style.display='none'; 
         loginBtn.innerText="Вход..."; 
@@ -382,7 +375,7 @@
     }
 
     function initApp() {
-        // 1. Регионы
+        // Регионы
         let allowedRegions = [];
         let uReg = currentUser.region || "";
         if (!uReg || uReg.toLowerCase().includes('админ')) {
@@ -396,7 +389,7 @@
             updateAll();
         }, true); 
 
-        // 2. Группы
+        // Группы
         let allowedGroups = [];
         let uGrp = currentUser.group || "";
         if (!uGrp || uGrp.toLowerCase().includes('админ')) {
@@ -410,12 +403,13 @@
             updateAll();
         }, true);
 
-        // 3. Месяцы
+        // Месяцы
         setupMultiSelect('month-multiselect', allData.filters.months, (selected) => {
             selectedMonths = selected;
             updateAll();
         }, false); 
         
+        // Авто-выбор первого месяца
         if(allData.filters.months.length > 0) {
             setTimeout(() => {
                 const mContainer = document.getElementById('month-multiselect');
@@ -425,7 +419,7 @@
         }
     }
 
-    // --- Мульти-селект ---
+    // --- Мульти-селект (с исправлениями Юникода) ---
     function setupMultiSelect(containerId, optionsList, onChangeCallback, selectAllByDefault) {
         const container = document.getElementById(containerId);
         if(!container) return;
@@ -433,10 +427,9 @@
         const list = container.querySelector('.list-items');
         list.innerHTML = '';
         
-        // Кнопка Все
         let allItem = document.createElement('div');
         allItem.className = 'item'; 
-        allItem.innerHTML = `<span class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none" stroke="white" stroke-width="2"><path d="M1 4L3.5 6.5L9 1"/></svg></span><span class="item-text">Выбрать все</span>`;
+        allItem.innerHTML = `<span class="checkbox"></span><span class="item-text">Выбрать все</span>`;
         allItem.addEventListener('click', (e) => {
             e.stopPropagation();
             const isChecked = allItem.classList.contains('checked');
@@ -455,7 +448,7 @@
             let item = document.createElement('div');
             item.className = 'item'; 
             item.dataset.value = opt;
-            item.innerHTML = `<span class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none" stroke="white" stroke-width="2"><path d="M1 4L3.5 6.5L9 1"/></svg></span><span class="item-text">${opt}</span>`;
+            item.innerHTML = `<span class="checkbox"></span><span class="item-text">${opt}</span>`;
             item.addEventListener('click', (e) => {
                 e.stopPropagation();
                 item.classList.toggle('checked');
