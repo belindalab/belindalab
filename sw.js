@@ -6,16 +6,28 @@ const urlsToCache = [
   './icon-512.png'
 ];
 
+// Установка: Кэшируем основные файлы приложения
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+      .then(cache => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
   );
 });
 
+// Запрос: Отдаем из кэша, если есть, иначе идем в сеть
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
-      .then(response => response || fetch(event.request))
+      .then(response => {
+        // Ответ из кэша
+        if (response) {
+          return response;
+        }
+        // Запрос в сеть (для API)
+        return fetch(event.request);
+      })
   );
 });
