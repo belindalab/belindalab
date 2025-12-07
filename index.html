@@ -141,6 +141,20 @@
         #loading { text-align: center; padding: 60px; color: var(--text-light); }
         @media (max-width: 600px) { .app-header, .content, .filters { padding: 15px; } }
     </style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="theme-color" content="#DE3B20">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('App ready to install', reg))
+        .catch(err => console.log('SW Error', err));
+    });
+  }
+</script>
 </head>
 <body>
 
