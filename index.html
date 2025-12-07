@@ -103,6 +103,25 @@
         }
         .item-text { font-size: 14px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+        /* Стили для тегов выбранных элементов */
+        .selected-tags {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; min-height: 28px;
+        }
+        .selected-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            background-color: rgba(222, 59, 32, 0.1); color: var(--primary);
+            padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 500;
+            animation: fadeIn 0.2s ease-out;
+        }
+        .selected-tag .tag-remove {
+            cursor: pointer; font-weight: 700; font-size: 14px; line-height: 1;
+            width: 16px; height: 16px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: 0.2s;
+        }
+        .selected-tag .tag-remove:hover {
+            background-color: var(--primary); color: white;
+        }
+
         /* KPI Cards */
         .kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .kpi-card {
@@ -196,6 +215,7 @@
                     <div class="multiselect" id="region-multiselect">
                         <div class="select-btn">Все регионы</div>
                         <div class="list-items"></div>
+                        <div class="selected-tags"></div>
                     </div>
                 </div>
                 <div class="filter-group">
@@ -203,6 +223,7 @@
                     <div class="multiselect" id="group-multiselect">
                         <div class="select-btn">Все группы</div>
                         <div class="list-items"></div>
+                        <div class="selected-tags"></div>
                     </div>
                 </div>
                 <div class="filter-group">
@@ -210,6 +231,7 @@
                     <div class="multiselect" id="month-multiselect">
                         <div class="select-btn">Выберите месяц</div>
                         <div class="list-items"></div>
+                        <div class="selected-tags"></div>
                     </div>
                 </div>
             </div>
@@ -294,7 +316,7 @@
 
 <script>
     // === ССЫЛКА НА ВАШ APPS SCRIPT ===
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnXMQaEyAI2E3J4uK7mYQN97mwWnUv6wwwgM2EUIdhv8gR9WcLqT0946wb_logjkShpw/exec"; 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtCJ-DCoAY3uxTj2AayUpwqPxNzwYECySI3ag4vFy_XXH6kcYkeLJAiyXdcsA9D5jRLA/exec"; 
     // ==================================
 
     let allData = {};
@@ -425,7 +447,9 @@
         if(!container) return;
         const btn = container.querySelector('.select-btn');
         const list = container.querySelector('.list-items');
+        const tagsContainer = container.querySelector('.selected-tags');
         list.innerHTML = '';
+        if(tagsContainer) tagsContainer.innerHTML = '';
         
         let allItem = document.createElement('div');
         allItem.className = 'item'; 
@@ -472,14 +496,64 @@
         function updateBtnText() {
             const checkedItems = Array.from(list.querySelectorAll('.item.checked:not(:first-child)'));
             const values = checkedItems.map(el => el.dataset.value);
-            if(checkedItems.length > 0 && checkedItems.length < optionsList.length) {
-                if (checkedItems.length <= 2) btn.innerText = values.join(', ');
-                else btn.innerText = `Выбрано (${checkedItems.length})`;
+            
+            // Обновление текста кнопки
+            if(checkedItems.length === 0) {
+                btn.innerText = "Выберите...";
+            } else if(checkedItems.length === 1) {
+                // Один элемент - показываем его название
+                btn.innerText = values[0];
             } else if (checkedItems.length === optionsList.length && optionsList.length > 0) {
                 btn.innerText = "Все выбраны";
             } else {
-                btn.innerText = "Выберите...";
+                // Несколько, но не все - показываем количество или названия
+                if (checkedItems.length <= 2) btn.innerText = values.join(', ');
+                else btn.innerText = `Выбрано (${checkedItems.length})`;
             }
+            
+            // Обновление тегов выбранных элементов
+            if(tagsContainer) {
+                tagsContainer.innerHTML = '';
+                
+                if(checkedItems.length === 0) {
+                    // Ничего не выбрано - не показываем теги
+                } else if(checkedItems.length === optionsList.length && optionsList.length > 0) {
+                    // Все выбраны - показываем один тег "Все выбраны"
+                    const tag = document.createElement('span');
+                    tag.className = 'selected-tag';
+                    tag.innerHTML = `<span>Все выбраны</span><span class="tag-remove" data-action="clear-all">×</span>`;
+                    
+                    // Обработчик удаления - снимает все выбранные
+                    tag.querySelector('.tag-remove').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        list.querySelectorAll('.item').forEach(el => el.classList.remove('checked'));
+                        updateBtnText();
+                    });
+                    
+                    tagsContainer.appendChild(tag);
+                } else {
+                    // Показываем выбранные элементы (один или несколько)
+                    values.forEach(val => {
+                        const tag = document.createElement('span');
+                        tag.className = 'selected-tag';
+                        tag.innerHTML = `<span>${val}</span><span class="tag-remove" data-value="${val}">×</span>`;
+                        
+                        // Обработчик удаления по клику на ×
+                        tag.querySelector('.tag-remove').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const itemToUncheck = list.querySelector(`.item[data-value="${val}"]`);
+                            if(itemToUncheck) {
+                                itemToUncheck.classList.remove('checked');
+                                allItem.classList.remove('checked');
+                                updateBtnText();
+                            }
+                        });
+                        
+                        tagsContainer.appendChild(tag);
+                    });
+                }
+            }
+            
             onChangeCallback(values);
         }
 
