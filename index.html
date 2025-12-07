@@ -50,9 +50,9 @@
 
         .content { max-width: 1100px; margin: 20px auto; padding: 0 20px; }
 
-        /* TABS (Переключатель) */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: #fff; padding: 5px; border-radius: 12px; box-shadow: var(--shadow); }
-        .tab-btn { flex: 1; padding: 12px; border: none; background: transparent; border-radius: 8px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; font-size: 14px; }
+        /* TABS */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: #fff; padding: 5px; border-radius: 12px; box-shadow: var(--shadow); overflow-x: auto; }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: transparent; border-radius: 8px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; font-size: 13px; white-space: nowrap; }
         .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 5px rgba(222, 59, 32, 0.3); }
 
         /* Filters */
@@ -63,21 +63,19 @@
         }
         .filter-group label { display: block; font-size: 11px; color: var(--text-light); margin-bottom: 6px; text-transform: uppercase; font-weight: 700; }
 
-        /* Multi-Select Styles */
+        /* Multi-Select */
         .multiselect { position: relative; width: 100%; }
         .select-btn { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 1px solid #e0e5ee; border-radius: 8px; background: #fff; cursor: pointer; font-size: 14px; font-weight: 500; min-height: 42px; }
         .select-btn::after { content: ""; width: 6px; height: 6px; border-right: 2px solid #8898aa; border-bottom: 2px solid #8898aa; transform: rotate(45deg); margin-left: 10px; transition: 0.2s; }
         .select-btn.open::after { transform: rotate(-135deg); }
         .list-items { position: absolute; top: 105%; left: 0; width: 100%; background: #fff; border-radius: 8px; padding: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #f1f3f9; display: none; z-index: 200; max-height: 300px; overflow-y: auto; }
         .list-items.show { display: block; }
-        
         .item { display: flex; align-items: center; padding: 8px 10px; cursor: pointer; border-radius: 6px; }
         .item:hover { background-color: #f6f9fc; }
         .item .checkbox { height: 16px; width: 16px; border-radius: 4px; border: 2px solid #c0c0c0; display: flex; align-items: center; justify-content: center; margin-right: 10px; flex-shrink: 0; font-size: 12px; line-height: 1; color: white; font-weight: 700; }
         .item.checked .checkbox { background-color: var(--primary); border-color: var(--primary); }
         .item.checked .checkbox::before { content: "✓"; }
         .item-text { font-size: 13px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
         .selected-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
         .selected-tag { display: inline-flex; align-items: center; background: #fff0ec; color: var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; border: 1px solid rgba(222, 59, 32, 0.2); }
         .tag-remove { margin-left: 6px; cursor: pointer; font-weight: bold; font-size: 14px; line-height: 1; }
@@ -98,7 +96,7 @@
         .kpi-sub-label { font-size: 10px; color: var(--text-light); display: block; margin-bottom: 2px; }
         .kpi-sub-val { font-size: 14px; font-weight: 600; color: var(--text-dark); }
 
-        /* Tables & Typography */
+        /* Tables */
         h3 { margin: 30px 0 15px 0; font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; }
         h3::before { content: ''; display: block; width: 4px; height: 18px; background: var(--primary); border-radius: 4px; }
         .table-wrapper { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow-x: auto; margin-bottom: 30px; }
@@ -114,11 +112,35 @@
         .row-year td { background-color: #e8f5e9; font-weight: 700; border-top: 2px solid #2e7d32; font-size: 14px; color: #1b5e20; }
         .row-quarter td { background-color: #e3f2fd; font-weight: 600; color: #0d47a1; }
 
-        /* ABC Analysis Styles */
+        /* ABC & BCG Styles (Обновлено для мобилок) */
         .abc-group-header td { background-color: #f1f3f9; color: var(--text-dark); font-weight: 800; font-size: 14px; border-bottom: 2px solid #e0e5ee; padding: 15px; }
         .abc-badge-a { background: #e6fffa; color: #28a745; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #28a745; }
         .abc-badge-b { background: #fffaf0; color: #dd6b20; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #dd6b20; }
         .abc-badge-c { background: #fff5f5; color: #e53e3e; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #e53e3e; }
+
+        /* BCG Vertical Stack */
+        .bcg-grid { display: flex; flex-direction: column; gap: 20px; } /* Сделали вертикально */
+        .bcg-quadrant { background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow); border: 1px solid #f1f3f9; position: relative; overflow: hidden; }
+        .bcg-quadrant::before { content: ''; position: absolute; top:0; left:0; width: 100%; height: 6px; }
+        
+        .bcg-stars::before { background: #2dce89; } 
+        .bcg-cows::before { background: #fb6340; } 
+        .bcg-questions::before { background: #5e72e4; } 
+        .bcg-dogs::before { background: #f5365c; } 
+
+        .bcg-title { font-weight: 800; text-transform: uppercase; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .bcg-desc { font-size: 12px; color: #666; margin-bottom: 15px; line-height: 1.4; border-bottom: 1px solid #eee; padding-bottom: 10px; font-style: italic; }
+        
+        .bcg-list { list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto; }
+        .bcg-item { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+        .bcg-item:last-child { border: none; }
+        .bcg-growth.up { color: #2dce89; font-weight: bold; }
+        .bcg-growth.down { color: #f5365c; font-weight: bold; }
+
+        /* Trend Indicator */
+        .trend-up { color: #2dce89; font-weight: 700; font-size: 12px; }
+        .trend-down { color: #f5365c; font-weight: 700; font-size: 12px; }
+        .trend-neutral { color: #8898aa; font-size: 12px; }
 
         /* Detail View */
         #detail-view { display: none; }
@@ -165,6 +187,7 @@
         <div class="tabs" id="main-tabs" style="display:none;">
             <button class="tab-btn active" onclick="switchTab('sales')">📊 Продажи</button>
             <button class="tab-btn" onclick="switchTab('abc')">🧠 ABC Анализ</button>
+            <button class="tab-btn" onclick="switchTab('bcg')">💠 BCG Матрица</button>
         </div>
 
         <div id="loading">Загрузка данных...</div>
@@ -214,7 +237,7 @@
             <div class="table-wrapper">
                 <table id="salesTable">
                     <thead>
-                        <tr><th>Препарат</th><th class="num">Пл кол</th><th class="num">Фк кол</th><th class="num">%</th><th class="num">Пл Сум</th><th class="num">Фк Сум</th><th class="num">%</th></tr>
+                        <tr><th>Препарат</th><th class="num">План</th><th class="num">Факт</th><th class="num">Тренд</th><th class="num">%</th><th class="num">План (С)</th><th class="num">Факт (С)</th><th class="num">%</th></tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
                 </table>
@@ -233,21 +256,45 @@
 
         <div id="abc-view" style="display:none;">
             <h3>ABC Анализ (По сумме продаж)</h3>
-            <p style="color: #8898aa; font-size: 13px; margin-bottom: 20px;">Группа A: 0-80% выручки | Группа B: 80-95% | Группа C: 95-100%</p>
-            
+            <p style="font-size:13px; color:#666; background:white; padding:10px; border-radius:8px; margin-bottom:20px; border:1px solid #eee;">
+                <b>Группа A (80%):</b> Лидеры продаж. Контролировать наличие всегда.<br>
+                <b>Группа B (15%):</b> Средний спрос. Поддерживать запас.<br>
+                <b>Группа C (5%):</b> Аутсайдеры. Заказывать под клиента.
+            </p>
             <div class="table-wrapper">
                 <table id="abcTable">
                     <thead>
-                        <tr>
-                            <th>Препарат</th>
-                            <th class="num">Продажи (Факт)</th>
-                            <th class="num">Доля %</th>
-                            <th class="num">Накоп %</th>
-                            <th class="num">Категория</th>
-                        </tr>
+                        <tr><th>Препарат</th><th class="num">Продажи</th><th class="num">Доля %</th><th class="num">Накоп %</th><th class="num">Категория</th></tr>
                     </thead>
                     <tbody id="abcBody"></tbody>
                 </table>
+            </div>
+        </div>
+
+        <div id="bcg-view" style="display:none;">
+            <h3>BCG Матрица (Рост / Доля рынка)</h3>
+            
+            <div class="bcg-grid">
+                <div class="bcg-quadrant bcg-stars">
+                    <div class="bcg-title">⭐ Звезды</div>
+                    <div class="bcg-desc">Лидеры рынка с высоким темпом роста. Требуют инвестиций для поддержки роста. <b>Стратегия:</b> Удерживать и развивать.</div>
+                    <ul class="bcg-list" id="bcg-list-stars"></ul>
+                </div>
+                <div class="bcg-quadrant bcg-cows">
+                    <div class="bcg-title">🐮 Дойные коровы</div>
+                    <div class="bcg-desc">Лидеры на зрелом рынке. Рост низкий, но приносят стабильный доход без вложений. <b>Стратегия:</b> Получать прибыль.</div>
+                    <ul class="bcg-list" id="bcg-list-cows"></ul>
+                </div>
+                <div class="bcg-quadrant bcg-questions">
+                    <div class="bcg-title">❓ Трудные дети</div>
+                    <div class="bcg-desc">Высокий рост, но слабая доля. Потребляют деньги, но прибыли мало. <b>Стратегия:</b> Инвестировать или отказаться.</div>
+                    <ul class="bcg-list" id="bcg-list-questions"></ul>
+                </div>
+                <div class="bcg-quadrant bcg-dogs">
+                    <div class="bcg-title">🐕 Собаки</div>
+                    <div class="bcg-desc">Низкий рост и малая доля. Часто убыточны или работают в ноль. <b>Стратегия:</b> Сокращать или выводить.</div>
+                    <ul class="bcg-list" id="bcg-list-dogs"></ul>
+                </div>
             </div>
         </div>
 
@@ -258,7 +305,6 @@
                     <select id="productSelector" class="product-select"></select>
                 </div>
             </div>
-            
             <h3>Динамика продаж</h3>
             <div class="table-wrapper">
                 <table id="detailTable">
@@ -273,9 +319,9 @@
 </div>
 
 <script>
-    // === ССЫЛКА НА APPS SCRIPT ===
+    // === ССЫЛКА НА ВАШ APPS SCRIPT ===
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtCJ-DCoAY3uxTj2AayUpwqPxNzwYECySI3ag4vFy_XXH6kcYkeLJAiyXdcsA9D5jRLA/exec"; 
-    // =============================
+    // ==================================
 
     let allData = {};
     let currentUser = null; 
@@ -283,7 +329,7 @@
     let selectedGroups = [];
     let selectedMonths = []; 
     let currentDetailProduct = null;
-    let currentTab = 'sales'; // 'sales' or 'abc'
+    let currentTab = 'sales';
 
     window.onload = function() {
         const savedUser = localStorage.getItem('belindaUser');
@@ -345,23 +391,19 @@
     }
 
     function initApp() {
-        // Регионы
         let allowedRegions = [];
         let uReg = currentUser.region || "";
         if (!uReg || uReg.toLowerCase().includes('админ')) { allowedRegions = allData.filters.regions; } 
         else { let userRegs = uReg.split(',').map(s => s.trim()); allowedRegions = allData.filters.regions.filter(r => userRegs.includes(r)); }
         setupMultiSelect('region-multiselect', allowedRegions, (selected) => { selectedRegions = selected; updateAll(); }, true); 
 
-        // Группы
         let allowedGroups = [];
         let uGrp = currentUser.group || "";
         if (!uGrp || uGrp.toLowerCase().includes('админ')) { allowedGroups = allData.filters.groups; } 
         else { let userGrps = uGrp.split(',').map(s => s.trim()); allowedGroups = allData.filters.groups.filter(g => userGrps.includes(g)); }
         setupMultiSelect('group-multiselect', allowedGroups, (selected) => { selectedGroups = selected; updateAll(); }, true);
 
-        // Месяцы
         setupMultiSelect('month-multiselect', allData.filters.months, (selected) => { selectedMonths = selected; updateAll(); }, false); 
-        
         if(allData.filters.months.length > 0) {
             setTimeout(() => {
                 const mContainer = document.getElementById('month-multiselect');
@@ -380,16 +422,17 @@
         currentTab = tab;
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         
+        ['dashboard-view', 'abc-view', 'bcg-view', 'detail-view'].forEach(id => document.getElementById(id).style.display = 'none');
+
         if (tab === 'sales') {
             document.querySelector("button[onclick=\"switchTab('sales')\"]").classList.add('active');
             document.getElementById('dashboard-view').style.display = 'block';
-            document.getElementById('abc-view').style.display = 'none';
-            document.getElementById('detail-view').style.display = 'none';
-        } else {
+        } else if (tab === 'abc') {
             document.querySelector("button[onclick=\"switchTab('abc')\"]").classList.add('active');
-            document.getElementById('dashboard-view').style.display = 'none';
             document.getElementById('abc-view').style.display = 'block';
-            document.getElementById('detail-view').style.display = 'none';
+        } else if (tab === 'bcg') {
+            document.querySelector("button[onclick=\"switchTab('bcg')\"]").classList.add('active');
+            document.getElementById('bcg-view').style.display = 'block';
         }
         updateAll();
     }
@@ -406,9 +449,7 @@
         filtered.forEach(p => {
             if (!grouped[p.name]) {
                 grouped[p.name] = { name: p.name, salesData: {} };
-                allData.filters.months.forEach(m => {
-                    grouped[p.name].salesData[m] = { pl_qty:0, fc_qty:0, pl_sum:0, fc_sum:0 };
-                });
+                allData.filters.months.forEach(m => { grouped[p.name].salesData[m] = { pl_qty:0, fc_qty:0, pl_sum:0, fc_sum:0 }; });
             }
             allData.filters.months.forEach(m => {
                 let s = p.salesData[m];
@@ -430,8 +471,10 @@
             renderKPI(aggregatedProducts);
             renderTable(aggregatedProducts);
             renderSummary(aggregatedProducts, true);
-        } else {
+        } else if (currentTab === 'abc') {
             renderABC(aggregatedProducts);
+        } else if (currentTab === 'bcg') {
+            renderBCG(aggregatedProducts);
         }
         
         if(document.getElementById('detail-view').style.display === 'block' && currentDetailProduct) {
@@ -449,63 +492,104 @@
         return t;
     }
 
+    // --- MoM Logic ---
+    function getMoM(product) {
+        if(selectedMonths.length === 1) {
+            let currMonth = selectedMonths[0];
+            let idx = allData.filters.months.indexOf(currMonth);
+            if(idx > 0) {
+                let prevMonth = allData.filters.months[idx-1];
+                let currVal = product.salesData[currMonth].fc_sum || 0;
+                let prevVal = product.salesData[prevMonth].fc_sum || 0;
+                if(prevVal === 0) return null;
+                return ((currVal - prevVal) / prevVal) * 100;
+            }
+        }
+        return null;
+    }
+
+    // --- BCG Logic ---
+    function renderBCG(products) {
+        if(products.length === 0 || !selectedMonths || selectedMonths.length === 0) return;
+
+        let bcgData = products.map(p => {
+            let currSum = 0; let prevSum = 0;
+            selectedMonths.forEach(m => currSum += (p.salesData[m].fc_sum || 0));
+            
+            let firstSelectedIdx = allData.filters.months.indexOf(selectedMonths[0]);
+            if(firstSelectedIdx > 0) {
+                let prevMonth = allData.filters.months[firstSelectedIdx-1];
+                prevSum = p.salesData[prevMonth].fc_sum || 0;
+            }
+
+            let growth = prevSum > 0 ? ((currSum - prevSum) / prevSum) * 100 : 0;
+            return { name: p.name, value: currSum, growth: growth };
+        }).filter(p => p.value > 0);
+
+        let totalMarket = bcgData.reduce((acc, p) => acc + p.value, 0);
+        let avgShare = totalMarket > 0 ? (100 / bcgData.length) : 0; 
+
+        let lists = { stars: '', cows: '', questions: '', dogs: '' };
+
+        bcgData.forEach(p => {
+            let share = (p.value / totalMarket) * 100;
+            let isHighShare = share >= avgShare; 
+            let isHighGrowth = p.growth >= 0;    
+
+            let itemHTML = `
+                <li class="bcg-item">
+                    <span>${p.name}</span>
+                    <div style="text-align:right">
+                        <div style="font-size:11px; color:#888">Доля: ${share.toFixed(1)}%</div>
+                        <div class="bcg-growth ${p.growth >= 0 ? 'up' : 'down'}">${p.growth > 0 ? '+' : ''}${p.growth.toFixed(1)}%</div>
+                    </div>
+                </li>
+            `;
+
+            if (isHighGrowth && isHighShare) lists.stars += itemHTML;
+            else if (!isHighGrowth && isHighShare) lists.cows += itemHTML;
+            else if (isHighGrowth && !isHighShare) lists.questions += itemHTML;
+            else lists.dogs += itemHTML;
+        });
+
+        document.getElementById('bcg-list-stars').innerHTML = lists.stars || '<li class="bcg-item" style="color:#999">Пусто</li>';
+        document.getElementById('bcg-list-cows').innerHTML = lists.cows || '<li class="bcg-item" style="color:#999">Пусто</li>';
+        document.getElementById('bcg-list-questions').innerHTML = lists.questions || '<li class="bcg-item" style="color:#999">Пусто</li>';
+        document.getElementById('bcg-list-dogs').innerHTML = lists.dogs || '<li class="bcg-item" style="color:#999">Пусто</li>';
+    }
+
     // --- ABC Logic ---
     function renderABC(products) {
         const tbody = document.getElementById('abcBody');
         tbody.innerHTML = '';
+        if(products.length === 0) { tbody.innerHTML='<tr><td colspan="5" style="text-align:center; padding: 20px;">Нет данных</td></tr>'; return; }
 
-        if(products.length === 0 || !selectedMonths || selectedMonths.length === 0) {
-             tbody.innerHTML='<tr><td colspan="5" style="text-align:center; padding: 20px;">Нет данных или не выбран месяц</td></tr>'; return;
-        }
-
-        // 1. Calculate sum for selected months per product
         let abcList = products.map(p => {
             let agg = aggregateMonths(p, selectedMonths);
             return { name: p.name, value: agg.fs };
         }).filter(item => item.value > 0);
 
-        // 2. Sort DESC
         abcList.sort((a, b) => b.value - a.value);
-
-        // 3. Calculate Total
         let totalSales = abcList.reduce((sum, item) => sum + item.value, 0);
         let currentSum = 0;
-
-        // 4. Assign Groups & Render
         let currentGroup = '';
 
         abcList.forEach(item => {
             currentSum += item.value;
             let share = (item.value / totalSales) * 100;
             let accum = (currentSum / totalSales) * 100;
-            let category = 'C';
-            let badgeClass = 'abc-badge-c';
+            let category = 'C'; let badgeClass = 'abc-badge-c';
 
-            if (accum <= 80 || (accum > 80 && accum - share < 80)) { 
-                category = 'A'; badgeClass = 'abc-badge-a';
-            } else if (accum <= 95 || (accum > 95 && accum - share < 95)) { 
-                category = 'B'; badgeClass = 'abc-badge-b';
-            }
+            if (accum <= 80 || (accum > 80 && accum - share < 80)) { category = 'A'; badgeClass = 'abc-badge-a'; } 
+            else if (accum <= 95 || (accum > 95 && accum - share < 95)) { category = 'B'; badgeClass = 'abc-badge-b'; }
 
-            // Group Headers
             if (category !== currentGroup) {
                 currentGroup = category;
-                let trHeader = document.createElement('tr');
-                trHeader.className = 'abc-group-header';
                 let range = category === 'A' ? '0-80%' : (category === 'B' ? '80-95%' : '95-100%');
-                trHeader.innerHTML = `<td colspan="5">Группа ${category} (${range})</td>`;
-                tbody.appendChild(trHeader);
+                tbody.innerHTML += `<tr class="abc-group-header"><td colspan="5">Группа ${category} (${range})</td></tr>`;
             }
 
-            let tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><span class="prod-name">${item.name}</span></td>
-                <td class="num">${formatNum(item.value)}</td>
-                <td class="num num-light">${share.toFixed(1)}%</td>
-                <td class="num num-light">${accum.toFixed(1)}%</td>
-                <td class="num"><span class="${badgeClass}">Группа ${category}</span></td>
-            `;
-            tbody.appendChild(tr);
+            tbody.innerHTML += `<tr><td><span class="prod-name">${item.name}</span></td><td class="num">${formatNum(item.value)}</td><td class="num num-light">${share.toFixed(1)}%</td><td class="num num-light">${accum.toFixed(1)}%</td><td class="num"><span class="${badgeClass}">Группа ${category}</span></td></tr>`;
         });
     }
 
@@ -541,69 +625,58 @@
     function renderTable(products) {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
-        if(products.length===0 || !selectedMonths || selectedMonths.length===0) { 
-            tbody.innerHTML='<tr><td colspan="7" style="text-align:center; padding: 20px;">Нет данных</td></tr>'; return; 
-        }
+        if(products.length===0) { tbody.innerHTML='<tr><td colspan="7" style="text-align:center; padding: 20px;">Нет данных</td></tr>'; return; }
+        
         products.forEach(p => {
             let agg = aggregateMonths(p, selectedMonths); 
             if(agg.pq==0 && agg.fq==0 && agg.ps==0) return;
+            
+            let mom = getMoM(p);
+            let momHtml = '<span class="trend-neutral">—</span>';
+            if (mom !== null) {
+                momHtml = mom >= 0 
+                    ? `<span class="trend-up">▲ +${mom.toFixed(1)}%</span>` 
+                    : `<span class="trend-down">▼ ${mom.toFixed(1)}%</span>`;
+            }
+
             let tr = document.createElement('tr');
             tr.onclick = () => openDetail(p.name);
             let pq = agg.pq>0?(agg.fq/agg.pq)*100:0;
             let ps = agg.ps>0?(agg.fs/agg.ps)*100:0;
-            tr.innerHTML = `<td><span class="prod-name">${p.name}</span></td><td class="num num-light">${formatNum(agg.pq)}</td><td class="num">${formatNum(agg.fq)}</td><td class="num">${getBadge(pq)}</td><td class="num num-light">${formatNum(agg.ps)}</td><td class="num">${formatNum(agg.fs)}</td><td class="num">${getBadge(ps)}</td>`;
+            tr.innerHTML = `<td><span class="prod-name">${p.name}</span></td><td class="num num-light">${formatNum(agg.pq)}</td><td class="num">${formatNum(agg.fq)}</td><td class="num">${momHtml}</td><td class="num">${getBadge(pq)}</td><td class="num num-light">${formatNum(agg.ps)}</td><td class="num">${formatNum(agg.fs)}</td><td class="num">${getBadge(ps)}</td>`;
             tbody.appendChild(tr);
         });
     }
 
     function renderSummary(products, isYearSummary) {
-        const tbody = document.getElementById('summaryBody');
-        tbody.innerHTML = '';
+        const tbody = document.getElementById('summaryBody'); tbody.innerHTML = '';
         let monthsToShow = isYearSummary ? allData.filters.months : allData.filters.months.filter(m => selectedMonths.includes(m));
-        let grandTotal = { pq:0, fq:0, ps:0, fs:0 };
-        let quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
-
+        let grandTotal = { pq:0, fq:0, ps:0, fs:0 }; let quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
         monthsToShow.forEach((m, index) => {
             let mo = { pq:0, fq:0, ps:0, fs:0 };
-            products.forEach(p => {
-                let s = p.salesData[m];
-                if(s) { mo.pq+=s.pl_qty; mo.fq+=s.fc_qty; mo.ps+=s.pl_sum; mo.fs+=s.fc_sum; }
-            });
+            products.forEach(p => { let s = p.salesData[m]; if(s) { mo.pq+=s.pl_qty; mo.fq+=s.fc_qty; mo.ps+=s.pl_sum; mo.fs+=s.fc_sum; } });
             addT(grandTotal, mo); addT(quarterTotal, mo);
             appendSumRow(tbody, m, mo, '');
-            if (isYearSummary && (index + 1) % 3 === 0) {
-                appendSumRow(tbody, `ИТОГ КВАРТАЛ ${(index + 1) / 3}`, quarterTotal, 'row-quarter');
-                quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
-            }
+            if (isYearSummary && (index + 1) % 3 === 0) { appendSumRow(tbody, `ИТОГ КВАРТАЛ ${(index + 1) / 3}`, quarterTotal, 'row-quarter'); quarterTotal = { pq:0, fq:0, ps:0, fs:0 }; }
         });
         if(monthsToShow.length > 1) appendSumRow(tbody, "ИТОГ ГОД", grandTotal, 'row-year');
     }
-
+    
     function appendSumRow(cont, title, d, rowClass) {
-        let tr = document.createElement('tr');
-        if(rowClass) tr.className = rowClass;
+        let tr = document.createElement('tr'); if(rowClass) tr.className = rowClass;
         let pq = d.pq>0?(d.fq/d.pq)*100:0; let ps = d.ps>0?(d.fs/d.ps)*100:0;
         tr.innerHTML=`<td>${title}</td><td class="num num-light">${formatNum(d.pq)}</td><td class="num">${formatNum(d.fq)}</td><td class="num">${getBadge(pq)}</td><td class="num num-light">${formatNum(d.ps)}</td><td class="num">${formatNum(d.fs)}</td><td class="num">${getBadge(ps)}</td>`;
         cont.appendChild(tr);
     }
 
-    // --- Detail View ---
     function openDetail(productName) {
         currentDetailProduct = productName;
-        document.getElementById('dashboard-view').style.display='none';
-        document.getElementById('abc-view').style.display='none';
+        ['dashboard-view', 'abc-view', 'bcg-view'].forEach(id => document.getElementById(id).style.display='none');
         document.getElementById('detail-view').style.display='block';
         window.scrollTo(0,0);
-
-        const selector = document.getElementById('productSelector');
-        selector.innerHTML = '';
+        const selector = document.getElementById('productSelector'); selector.innerHTML = '';
         const aggregatedProducts = getAggregatedProducts();
-        aggregatedProducts.forEach(p => {
-            let opt = document.createElement('option');
-            opt.value = p.name; opt.innerText = p.name;
-            if(p.name === productName) opt.selected = true;
-            selector.appendChild(opt);
-        });
+        aggregatedProducts.forEach(p => { let opt = document.createElement('option'); opt.value = p.name; opt.innerText = p.name; if(p.name === productName) opt.selected = true; selector.appendChild(opt); });
         renderDetailTable(productName);
     }
 
@@ -611,44 +684,32 @@
         currentDetailProduct = productName;
         const products = getAggregatedProducts();
         const product = products.find(p => p.name === productName);
-        const tbody = document.getElementById('detailBody'); 
-        tbody.innerHTML='';
+        const tbody = document.getElementById('detailBody'); tbody.innerHTML='';
         if(!product) return;
-
-        let grandTotal = { pq:0, fq:0, ps:0, fs:0 };
-        let quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
-
+        let grandTotal = { pq:0, fq:0, ps:0, fs:0 }; let quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
         allData.filters.months.forEach((m, index) => {
-            let s = product.salesData[m];
-            let mo = { pq:s.pl_qty, fq:s.fc_qty, ps:s.pl_sum, fs:s.fc_sum };
-            
+            let s = product.salesData[m]; let mo = { pq:s.pl_qty, fq:s.fc_qty, ps:s.pl_sum, fs:s.fc_sum };
             addT(grandTotal, mo); addT(quarterTotal, mo);
             appendSumRow(tbody, m, mo, '');
-
-            if ((index + 1) % 3 === 0) {
-                appendSumRow(tbody, `ИТОГ КВАРТАЛ ${(index + 1) / 3}`, quarterTotal, 'row-quarter');
-                quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
-            }
+            if ((index + 1) % 3 === 0) { appendSumRow(tbody, `ИТОГ КВАРТАЛ ${(index + 1) / 3}`, quarterTotal, 'row-quarter'); quarterTotal = { pq:0, fq:0, ps:0, fs:0 }; }
         });
         appendSumRow(tbody, "ИТОГ ГОД", grandTotal, 'row-year');
     }
 
     function closeDetailView() {
         document.getElementById('detail-view').style.display='none';
-        if(currentTab === 'sales') document.getElementById('dashboard-view').style.display='block';
-        else document.getElementById('abc-view').style.display='block';
+        if(currentTab==='sales') document.getElementById('dashboard-view').style.display='block';
+        else if(currentTab==='abc') document.getElementById('abc-view').style.display='block';
+        else document.getElementById('bcg-view').style.display='block';
         currentDetailProduct = null;
     }
 
-    // --- Multi-Select Helper (With Tags) ---
     function setupMultiSelect(containerId, optionsList, onChangeCallback, selectAllByDefault) {
-        const container = document.getElementById(containerId);
-        if(!container) return;
+        const container = document.getElementById(containerId); if(!container) return;
         const btn = container.querySelector('.select-btn');
         const list = container.querySelector('.list-items');
         const tagsContainer = container.querySelector('.selected-tags'); 
-        list.innerHTML = '';
-        if(tagsContainer) tagsContainer.innerHTML = '';
+        list.innerHTML = ''; if(tagsContainer) tagsContainer.innerHTML = '';
         
         let allItem = document.createElement('div');
         allItem.className = 'item'; 
@@ -656,13 +717,8 @@
         allItem.addEventListener('click', (e) => {
             e.stopPropagation();
             const isChecked = allItem.classList.contains('checked');
-            if(isChecked) {
-                allItem.classList.remove('checked');
-                list.querySelectorAll('.item:not(:first-child)').forEach(el => el.classList.remove('checked'));
-            } else {
-                allItem.classList.add('checked');
-                list.querySelectorAll('.item:not(:first-child)').forEach(el => el.classList.add('checked'));
-            }
+            if(isChecked) { allItem.classList.remove('checked'); list.querySelectorAll('.item:not(:first-child)').forEach(el => el.classList.remove('checked')); } 
+            else { allItem.classList.add('checked'); list.querySelectorAll('.item:not(:first-child)').forEach(el => el.classList.add('checked')); }
             updateUI();
         });
         list.appendChild(allItem);
@@ -683,65 +739,43 @@
             list.appendChild(item);
         });
 
-        if(selectAllByDefault && optionsList.length > 0) { 
-            allItem.classList.add('checked');
-            list.querySelectorAll('.item').forEach(el => el.classList.add('checked'));
-            updateUI();
-        } else { updateUI(); }
+        if(selectAllByDefault && optionsList.length > 0) { allItem.classList.add('checked'); list.querySelectorAll('.item').forEach(el => el.classList.add('checked')); updateUI(); } else { updateUI(); }
 
         function updateUI() {
             const checkedItems = Array.from(list.querySelectorAll('.item.checked:not(:first-child)'));
             const values = checkedItems.map(el => el.dataset.value);
-            
-            // Text Update
             if(checkedItems.length === 0) btn.innerText = "Выберите...";
             else if (checkedItems.length === optionsList.length && optionsList.length > 0) btn.innerText = "Все выбраны";
             else btn.innerText = `Выбрано (${checkedItems.length})`;
 
-            // Tags Update
             if(tagsContainer) {
                 tagsContainer.innerHTML = '';
                 if(checkedItems.length > 0) {
-                    if (checkedItems.length === optionsList.length) {
-                        renderTag("Все выбраны", () => allItem.click());
-                    } else {
-                        values.forEach(val => renderTag(val, () => {
-                            const item = list.querySelector(`.item[data-value="${val}"]`);
-                            if(item) item.click();
-                        }));
-                    }
+                    if (checkedItems.length === optionsList.length) { renderTag("Все выбраны", () => allItem.click()); } 
+                    else { values.forEach(val => renderTag(val, () => { const item = list.querySelector(`.item[data-value="${val}"]`); if(item) item.click(); })); }
                 }
             }
             onChangeCallback(values);
         }
 
         function renderTag(text, onRemove) {
-            const tag = document.createElement('span');
-            tag.className = 'selected-tag';
+            const tag = document.createElement('span'); tag.className = 'selected-tag';
             tag.innerHTML = `<span>${text}</span><span class="tag-remove">×</span>`;
-            tag.querySelector('.tag-remove').addEventListener('click', (e) => {
-                e.stopPropagation();
-                onRemove();
-            });
+            tag.querySelector('.tag-remove').addEventListener('click', (e) => { e.stopPropagation(); onRemove(); });
             tagsContainer.appendChild(tag);
         }
 
-        const newBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(newBtn, btn);
+        const newBtn = btn.cloneNode(true); btn.parentNode.replaceChild(newBtn, btn);
         newBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             document.querySelectorAll('.multiselect .select-btn').forEach(b => { if(b !== newBtn) { b.classList.remove('open'); b.nextElementSibling.classList.remove('show'); } });
-            newBtn.classList.toggle('open');
-            list.classList.toggle('show');
+            newBtn.classList.toggle('open'); list.classList.toggle('show');
         });
     }
     
     window.addEventListener('click', (e) => {
         document.querySelectorAll('.multiselect').forEach(ms => {
-            if (!ms.contains(e.target)) {
-                ms.querySelector('.select-btn').classList.remove('open');
-                ms.querySelector('.list-items').classList.remove('show');
-            }
+            if (!ms.contains(e.target)) { ms.querySelector('.select-btn').classList.remove('open'); ms.querySelector('.list-items').classList.remove('show'); }
         });
     });
 
