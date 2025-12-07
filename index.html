@@ -38,7 +38,9 @@
         .logo { max-height: 60px; margin-bottom: 40px; }
         input { width: 100%; padding: 16px; margin-bottom: 15px; border: 1px solid #e7e7e7; border-radius: 12px; background: #fcfcfc; font-size: 15px; }
         input:focus { border-color: var(--primary); background: #fff; }
-        button { width: 100%; padding: 16px; background-color: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        button { width: 100%; padding: 16px; background-color: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
         #login-error { color: var(--red-text); margin-top: 15px; font-size: 14px; display: none; }
 
         /* Header */
@@ -48,7 +50,7 @@
         .user-info { display: flex; align-items: center; gap: 15px; }
         .user-name { font-weight: 600; font-size: 14px; }
         
-        /* Кнопка Выйти (Красная) */
+        /* Кнопка Выйти */
         .logout-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 600; }
 
         .content { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
@@ -157,7 +159,7 @@
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('App ready to install', reg))
+            .then(reg => console.log('App ready to install'))
             .catch(err => console.log('SW Error', err));
         });
       }
@@ -170,7 +172,7 @@
         <img src="https://belinda.tj/img/main-logo.svg" alt="Belinda" class="logo">
         <input type="text" id="loginUser" placeholder="Логин">
         <input type="password" id="loginPass" placeholder="Пароль">
-        <button onclick="performLogin()">Войти</button>
+        <button id="loginBtn" onclick="performLogin()">Войти</button>
         <div id="login-error">Ошибка входа</div>
     </div>
 </div>
@@ -293,9 +295,8 @@
 </div>
 
 <script>
-    // === ССЫЛКА НА ВАШ APPS SCRIPT ===
-    // Пожалуйста, вставьте актуальную ссылку ниже
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtCJ-DCoAY3uxTj2AayUpwqPxNzwYECySI3ag4vFy_XXH6kcYkeLJAiyXdcsA9D5jRLA/exec"; 
+    // === ВАЖНО: ССЫЛКА НА СКРИПТ (Проверьте, что это ваша ссылка) ===
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnXMQaEyAI2E3J4uK7mYQN97mwWnUv6wwwgM2EUIdhv8gR9WcLqT0946wb_logjkShpw/exec"; 
     // ==================================
 
     let allData = {};
@@ -307,9 +308,15 @@
     window.onload = function() {
         const savedUser = localStorage.getItem('belindaUser');
         if (savedUser) {
-            currentUser = JSON.parse(savedUser);
-            document.getElementById('display-username').innerText = currentUser.login;
-            showApp();
+            try {
+                currentUser = JSON.parse(savedUser);
+                if(currentUser && currentUser.login) {
+                    document.getElementById('display-username').innerText = currentUser.login;
+                    showApp();
+                } else {
+                    localStorage.removeItem('belindaUser');
+                }
+            } catch(e) { localStorage.removeItem('belindaUser'); }
         }
     };
 
@@ -317,10 +324,14 @@
         const loginInput = document.getElementById('loginUser').value.trim();
         const passInput = document.getElementById('loginPass').value.trim();
         const errorDiv = document.getElementById('login-error');
-        const loginBtn = document.querySelector('#login-screen button');
+        const loginBtn = document.getElementById('loginBtn');
 
         if (!loginInput || !passInput) { errorDiv.innerText = "Введите данные"; errorDiv.style.display='block'; return; }
-        errorDiv.style.display='none'; loginBtn.innerText="Вход..."; loginBtn.disabled=true;
+        
+        // Визуальная реакция кнопки
+        errorDiv.style.display='none'; 
+        loginBtn.innerText="Вход..."; 
+        loginBtn.disabled=true;
 
         fetch(`${SCRIPT_URL}?action=login&login=${encodeURIComponent(loginInput)}&password=${encodeURIComponent(passInput)}`)
             .then(r => r.json())
@@ -333,10 +344,14 @@
                     document.getElementById('display-username').innerText = currentUser.login;
                     showApp();
                 } else {
-                    errorDiv.innerText = data.message; errorDiv.style.display='block';
+                    errorDiv.innerText = data.message || "Ошибка входа"; errorDiv.style.display='block';
                 }
             })
-            .catch(e => { loginBtn.innerText="Войти"; errorDiv.innerText="Ошибка сети"; errorDiv.style.display='block'; });
+            .catch(e => { 
+                loginBtn.innerText="Войти"; loginBtn.disabled=false;
+                errorDiv.innerText="Ошибка сети. Проверьте интернет."; errorDiv.style.display='block'; 
+                console.error(e);
+            });
     }
 
     function logout() {
@@ -358,16 +373,20 @@
                 document.getElementById('loading').style.display='none';
                 document.getElementById('dashboard-view').style.display='block';
                 document.getElementById('dashboard-view').classList.add('fade-in');
+            })
+            .catch(e => {
+                document.getElementById('loading').innerHTML = "Ошибка загрузки. Обновите страницу.";
             });
     }
 
     function initApp() {
-        // Регионы
+        // 1. Регионы
         let allowedRegions = [];
-        if (!currentUser.region || currentUser.region.toLowerCase().includes('админ')) {
+        let uReg = currentUser.region || "";
+        if (!uReg || uReg.toLowerCase().includes('админ')) {
             allowedRegions = allData.filters.regions;
         } else {
-            let userRegs = currentUser.region.split(',').map(s => s.trim());
+            let userRegs = uReg.split(',').map(s => s.trim());
             allowedRegions = allData.filters.regions.filter(r => userRegs.includes(r));
         }
         setupMultiSelect('region-multiselect', allowedRegions, (selected) => {
@@ -375,12 +394,13 @@
             updateAll();
         }, true); 
 
-        // Группы
+        // 2. Группы
         let allowedGroups = [];
-        if (!currentUser.group || currentUser.group.toLowerCase().includes('админ')) {
+        let uGrp = currentUser.group || "";
+        if (!uGrp || uGrp.toLowerCase().includes('админ')) {
             allowedGroups = allData.filters.groups;
         } else {
-            let userGrps = currentUser.group.split(',').map(s => s.trim());
+            let userGrps = uGrp.split(',').map(s => s.trim());
             allowedGroups = allData.filters.groups.filter(g => userGrps.includes(g));
         }
         setupMultiSelect('group-multiselect', allowedGroups, (selected) => {
@@ -388,22 +408,24 @@
             updateAll();
         }, true);
 
-        // Месяцы
+        // 3. Месяцы
         setupMultiSelect('month-multiselect', allData.filters.months, (selected) => {
             selectedMonths = selected;
             updateAll();
         }, false); 
         
-        // Авто-выбор первого месяца
         if(allData.filters.months.length > 0) {
-            const mContainer = document.getElementById('month-multiselect');
-            const items = mContainer.querySelectorAll('.item');
-            if(items.length > 1) items[1].click(); 
+            setTimeout(() => {
+                const mContainer = document.getElementById('month-multiselect');
+                const items = mContainer.querySelectorAll('.item');
+                if(items.length > 1) items[1].click(); 
+            }, 100);
         }
     }
 
     function setupMultiSelect(containerId, optionsList, onChangeCallback, selectAllByDefault) {
         const container = document.getElementById(containerId);
+        if(!container) return;
         const btn = container.querySelector('.select-btn');
         const list = container.querySelector('.list-items');
         list.innerHTML = '';
@@ -411,7 +433,8 @@
         let allItem = document.createElement('div');
         allItem.className = 'item'; 
         allItem.innerHTML = `<span class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none" stroke="white" stroke-width="2"><path d="M1 4L3.5 6.5L9 1"/></svg></span><span class="item-text">Выбрать все</span>`;
-        allItem.addEventListener('click', () => {
+        allItem.addEventListener('click', (e) => {
+            e.stopPropagation();
             const isChecked = allItem.classList.contains('checked');
             if(isChecked) {
                 allItem.classList.remove('checked');
@@ -428,188 +451,4 @@
             let item = document.createElement('div');
             item.className = 'item'; 
             item.dataset.value = opt;
-            item.innerHTML = `<span class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none" stroke="white" stroke-width="2"><path d="M1 4L3.5 6.5L9 1"/></svg></span><span class="item-text">${opt}</span>`;
-            item.addEventListener('click', () => {
-                item.classList.toggle('checked');
-                if(!item.classList.contains('checked')) allItem.classList.remove('checked');
-                const allOpts = list.querySelectorAll('.item:not(:first-child)');
-                const allChecked = list.querySelectorAll('.item.checked:not(:first-child)');
-                if(allOpts.length === allChecked.length && allOpts.length > 0) allItem.classList.add('checked');
-                updateBtnText();
-            });
-            list.appendChild(item);
-        });
-
-        if(selectAllByDefault) { allItem.click(); }
-
-        function updateBtnText() {
-            const checkedItems = Array.from(list.querySelectorAll('.item.checked:not(:first-child)'));
-            const values = checkedItems.map(el => el.dataset.value);
-            if(checkedItems.length > 0 && checkedItems.length < optionsList.length) {
-                if (checkedItems.length <= 2) btn.innerText = values.join(', ');
-                else btn.innerText = `Выбрано (${checkedItems.length})`;
-            } else if (checkedItems.length === optionsList.length && optionsList.length > 0) {
-                btn.innerText = "Все выбраны";
-            } else {
-                btn.innerText = "Выберите...";
-            }
-            onChangeCallback(values);
-        }
-
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.multiselect .select-btn').forEach(b => {
-                if(b !== btn) { b.classList.remove('open'); b.nextElementSibling.classList.remove('show'); }
-            });
-            btn.classList.toggle('open');
-            list.classList.toggle('show');
-        });
-    }
-    
-    window.addEventListener('click', (e) => {
-        document.querySelectorAll('.multiselect').forEach(ms => {
-            if (!ms.contains(e.target)) {
-                ms.querySelector('.select-btn').classList.remove('open');
-                ms.querySelector('.list-items').classList.remove('show');
-            }
-        });
-    });
-
-    function updateAll() {
-        renderKPI();
-        renderTable();
-        renderSummary(true); // true = Показываем полный год + кварталы
-    }
-
-    function getFilteredProducts() {
-        return allData.products.filter(p => {
-            const regionMatch = selectedRegions.includes(p.region);
-            const groupMatch = selectedGroups.includes(p.group);
-            return regionMatch && groupMatch;
-        });
-    }
-
-    function aggregateMonths(product, monthsToAggregate) {
-        let t = { pq:0, fq:0, ps:0, fs:0 };
-        monthsToAggregate.forEach(m => {
-            let s = product.salesData[m];
-            if(s) {
-                t.pq += Number(s.pl_qty)||0; t.fq += Number(s.fc_qty)||0;
-                t.ps += Number(s.pl_sum)||0; t.fs += Number(s.fc_sum)||0;
-            }
-        });
-        return t;
-    }
-
-    function renderKPI() {
-        const products = getFilteredProducts();
-        if(selectedMonths.length === 0) {
-           updateKPICard('card-qty', 'badge-qty', 0, 0, 'kpi-qty-perc', 'kpi-qty-plan', 'kpi-qty-fact');
-           updateKPICard('card-sum', 'badge-sum', 0, 0, 'kpi-sum-perc', 'kpi-sum-plan', 'kpi-sum-fact');
-           return;
-        }
-        let total = { pq:0, fq:0, ps:0, fs:0 };
-        products.forEach(p => {
-            let agg = aggregateMonths(p, selectedMonths); 
-            total.pq += agg.pq; total.fq += agg.fq; total.ps += agg.ps; total.fs += agg.fs;
-        });
-        updateKPICard('card-qty', 'badge-qty', total.pq, total.fq, 'kpi-qty-perc', 'kpi-qty-plan', 'kpi-qty-fact');
-        updateKPICard('card-sum', 'badge-sum', total.ps, total.fs, 'kpi-sum-perc', 'kpi-sum-plan', 'kpi-sum-fact');
-    }
-
-    function updateKPICard(cardId, badgeId, plan, fact, percId, planId, factId) {
-        document.getElementById(planId).innerText = formatNum(plan);
-        document.getElementById(factId).innerText = formatNum(fact);
-        let perc = plan > 0 ? (fact/plan)*100 : 0;
-        document.getElementById(percId).innerText = perc.toFixed(1) + "%";
-        let card = document.getElementById(cardId);
-        let badge = document.getElementById(badgeId);
-        card.className = 'kpi-card'; badge.className='badge';
-        if(perc>=100) { card.classList.add('status-green'); badge.classList.add('badge-green'); badge.innerText="Отлично"; }
-        else if(perc>=50) { card.classList.add('status-orange'); badge.classList.add('badge-orange'); badge.innerText="Норма"; }
-        else { card.classList.add('status-red'); badge.classList.add('badge-red'); badge.innerText="Внимание"; }
-    }
-
-    function renderTable() {
-        const products = getFilteredProducts();
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = '';
-        if(products.length===0 || selectedMonths.length===0) { 
-            tbody.innerHTML='<tr><td colspan="7" style="text-align:center">Нет данных</td></tr>'; return; 
-        }
-        products.forEach(p => {
-            let agg = aggregateMonths(p, selectedMonths); 
-            if(agg.pq==0 && agg.fq==0 && agg.ps==0) return;
-            let tr = document.createElement('tr');
-            tr.onclick = () => openDetail(p);
-            let pq = agg.pq>0?(agg.fq/agg.pq)*100:0;
-            let ps = agg.ps>0?(agg.fs/agg.ps)*100:0;
-            tr.innerHTML = `
-                <td><span class="prod-name">${p.name}</span></td>
-                <td class="num num-light">${formatNum(agg.pq)}</td><td class="num">${formatNum(agg.fq)}</td><td class="num">${getBadge(pq)}</td>
-                <td class="num num-light">${formatNum(agg.ps)}</td><td class="num">${formatNum(agg.fs)}</td><td class="num">${getBadge(ps)}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function renderSummary(isYearSummary = false) {
-        const products = getFilteredProducts();
-        const tbody = document.getElementById('summaryBody');
-        tbody.innerHTML = '';
-        
-        // ВСЕГДА используем ВСЕ месяцы, если isYearSummary (для нижней таблицы)
-        let monthsToShow = isYearSummary ? allData.filters.months : allData.filters.months.filter(m => selectedMonths.includes(m));
-        
-        let grandTotal = { pq:0, fq:0, ps:0, fs:0 };
-        let quarterTotal = { pq:0, fq:0, ps:0, fs:0 };
-
-        monthsToShow.forEach((m, index) => {
-            let mo = { pq:0, fq:0, ps:0, fs:0 };
-            products.forEach(p => {
-                let s = p.salesData[m];
-                if(s) {
-                    mo.pq+=Number(s.pl_qty)||0; mo.fq+=Number(s.fc_qty)||0;
-                    mo.ps+=Number(s.pl_sum)||0; mo.fs+=Number(s.fc_sum)||0;
-                }
-            });
-            
-            addT(grandTotal, mo);
-            addT(quarterTotal, mo);
-
-            appendSumRow(tbody, m, mo, '');
-
-            // ЛОГИКА КВАРТАЛОВ: (только для полного года)
-            if (isYearSummary && (index + 1) % 3 === 0) {
-                let qNum = (index + 1) / 3;
-                appendSumRow(tbody, `ИТОГ КВАРТАЛ ${qNum}`, quarterTotal, 'row-quarter');
-                quarterTotal = { pq:0, fq:0, ps:0, fs:0 }; // Сброс
-            }
-        });
-        
-        if(monthsToShow.length > 1) {
-            appendSumRow(tbody, "ИТОГ ГОД", grandTotal, 'row-year');
-        }
-    }
-
-    function appendSumRow(cont, title, d, rowClass) {
-        let tr = document.createElement('tr');
-        if(rowClass) tr.className = rowClass;
-        
-        let pq = d.pq>0?(d.fq/d.pq)*100:0;
-        let ps = d.ps>0?(d.fs/d.ps)*100:0;
-        
-        tr.innerHTML=`
-            <td>${title}</td>
-            <td class="num num-light">${formatNum(d.pq)}</td><td class="num">${formatNum(d.fq)}</td><td class="num">${getBadge(pq)}</td>
-            <td class="num num-light">${formatNum(d.ps)}</td><td class="num">${formatNum(d.fs)}</td><td class="num">${getBadge(ps)}</td>
-        `;
-        cont.appendChild(tr);
-    }
-
-    function openDetail(product) {
-        document.getElementById('dashboard-view').style.display='none';
-        document.getElementById('detail-view').style.display='block';
-        window.scrollTo(0,0);
-        document.getElementById('detail-title').innerText = product.name;
-        document.getElementById('detail-subtitle').innerText = `${product.region} / ${product.
+            item.innerHTML = `<span class="checkbox"><svg width="10" height="8" viewBox="0 0 10 8" fill="none" stroke="white" stroke-width="2"><path
