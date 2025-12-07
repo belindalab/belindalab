@@ -114,6 +114,8 @@
 
         /* ABC & BCG Styles (Обновлено для мобилок) */
         .abc-group-header td { background-color: #f1f3f9; color: var(--text-dark); font-weight: 800; font-size: 14px; border-bottom: 2px solid #e0e5ee; padding: 15px; }
+        .abc-group-title { display: block; margin-bottom: 6px; }
+        .abc-group-desc { display: block; font-weight: 400; font-size: 12px; color: #666; margin-top: 4px; font-style: italic; }
         .abc-badge-a { background: #e6fffa; color: #28a745; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #28a745; }
         .abc-badge-b { background: #fffaf0; color: #dd6b20; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #dd6b20; }
         .abc-badge-c { background: #fff5f5; color: #e53e3e; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #e53e3e; }
@@ -150,7 +152,160 @@
         .product-select { width: 100%; padding: 12px; border: 1px solid #e0e5ee; border-radius: 8px; font-size: 15px; font-weight: 600; color: var(--text-dark); outline: none; background: white; border-left: 4px solid var(--primary); }
 
         #loading { text-align: center; padding: 60px; color: var(--text-light); }
-        @media (max-width: 600px) { .app-header, .content, .filters { padding: 15px; } .detail-nav { flex-direction: column-reverse; align-items: stretch; } }
+        
+        /* Loading Screen Animation */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fe 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-content {
+            text-align: center;
+            max-width: 400px;
+            padding: 40px;
+        }
+        
+        .loading-logo {
+            max-height: 80px;
+            margin-bottom: 40px;
+            animation: logoFloat 2s ease-in-out infinite;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .loading-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .loading-subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .progress-container {
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .progress-bar-wrapper {
+            width: 100%;
+            height: 8px;
+            background: #e0e5ee;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, #ff6b4a 100%);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(222, 59, 32, 0.4);
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 1.5s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-percent {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .loading-status {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 10px;
+            min-height: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .loading-dots {
+            display: inline-block;
+            width: 20px;
+            text-align: left;
+        }
+        
+        @media (max-width: 600px) { 
+            .app-header, .content, .filters { padding: 15px; } 
+            .detail-nav { flex-direction: column-reverse; align-items: stretch; }
+            .loading-content { padding: 20px; }
+            .loading-title { font-size: 20px; }
+            .progress-percent { font-size: 28px; }
+        }
     </style>
 
     <script>
@@ -162,6 +317,21 @@
     </script>
 </head>
 <body>
+
+<div id="loading-screen">
+    <div class="loading-content">
+        <img src="https://belinda.tj/img/main-logo.svg" alt="Belinda" class="loading-logo">
+        <div class="loading-title">Загрузка данных</div>
+        <div class="loading-subtitle">Подготовка вашей панели управления</div>
+        <div class="progress-container">
+            <div class="progress-percent" id="progress-percent">0%</div>
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="loading-status" id="loading-status">Инициализация<span class="loading-dots">...</span></div>
+        </div>
+    </div>
+</div>
 
 <div id="login-screen" class="fade-in">
     <div class="login-card">
@@ -256,11 +426,6 @@
 
         <div id="abc-view" style="display:none;">
             <h3>ABC Анализ (По сумме продаж)</h3>
-            <p style="font-size:13px; color:#666; background:white; padding:10px; border-radius:8px; margin-bottom:20px; border:1px solid #eee;">
-                <b>Группа A (80%):</b> Лидеры продаж. Контролировать наличие всегда.<br>
-                <b>Группа B (15%):</b> Средний спрос. Поддерживать запас.<br>
-                <b>Группа C (5%):</b> Аутсайдеры. Заказывать под клиента.
-            </p>
             <div class="table-wrapper">
                 <table id="abcTable">
                     <thead>
@@ -338,7 +503,10 @@
                 currentUser = JSON.parse(savedUser);
                 if(currentUser && currentUser.login) {
                     document.getElementById('display-username').innerText = currentUser.login;
-                    showApp();
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('app-container').style.display = 'block';
+                    showLoadingAnimation();
+                    loadSalesData();
                 } else { localStorage.removeItem('belindaUser'); }
             } catch(e) { localStorage.removeItem('belindaUser'); }
         }
@@ -362,7 +530,10 @@
                     currentUser = data;
                     localStorage.setItem('belindaUser', JSON.stringify(currentUser));
                     document.getElementById('display-username').innerText = currentUser.login;
-                    showApp();
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('app-container').style.display = 'block';
+                    showLoadingAnimation();
+                    loadSalesData();
                 } else { errorDiv.innerText = data.message || "Ошибка входа"; errorDiv.style.display='block'; }
             })
             .catch(e => { loginBtn.innerText="Войти"; loginBtn.disabled=false; errorDiv.innerText="Ошибка сети"; errorDiv.style.display='block'; });
@@ -373,7 +544,91 @@
     function showApp() {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('app-container').style.display = 'block';
+        showLoadingAnimation();
         loadSalesData();
+    }
+
+    function showLoadingAnimation() {
+        const loadingScreen = document.getElementById('loading-screen');
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        const loadingStatus = document.getElementById('loading-status');
+        
+        loadingScreen.style.display = 'flex';
+        
+        let progress = 0;
+        const statuses = [
+            { percent: 20, text: 'Подключение к серверу' },
+            { percent: 40, text: 'Загрузка данных' },
+            { percent: 60, text: 'Обработка информации' },
+            { percent: 80, text: 'Формирование отчетов' },
+            { percent: 95, text: 'Завершение' }
+        ];
+        
+        let currentStatusIndex = 0;
+        
+        // Анимация точек
+        function animateDots() {
+            const dotsSpan = loadingStatus.querySelector('.loading-dots');
+            if (dotsSpan) {
+                let dotCount = (dotsSpan.textContent.match(/\./g) || []).length;
+                dotCount = (dotCount % 3) + 1;
+                dotsSpan.textContent = '.'.repeat(dotCount);
+            }
+        }
+        
+        if (dotsAnimationInterval) clearInterval(dotsAnimationInterval);
+        dotsAnimationInterval = setInterval(animateDots, 500);
+        
+        const animateProgress = () => {
+            if (progress < 95) {
+                progress += Math.random() * 3 + 1;
+                if (progress > 95) progress = 95;
+                
+                progressBar.style.width = progress + '%';
+                progressPercent.textContent = Math.floor(progress) + '%';
+                
+                // Обновляем статус
+                if (currentStatusIndex < statuses.length) {
+                    const nextStatus = statuses[currentStatusIndex];
+                    if (progress >= nextStatus.percent) {
+                        loadingStatus.innerHTML = nextStatus.text + '<span class="loading-dots">...</span>';
+                        currentStatusIndex++;
+                    }
+                }
+                
+                requestAnimationFrame(animateProgress);
+            }
+        };
+        
+        animateProgress();
+    }
+
+    let dotsAnimationInterval = null;
+    
+    function hideLoadingAnimation() {
+        const loadingScreen = document.getElementById('loading-screen');
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercent = document.getElementById('progress-percent');
+        const loadingStatus = document.getElementById('loading-status');
+        
+        if (dotsAnimationInterval) {
+            clearInterval(dotsAnimationInterval);
+            dotsAnimationInterval = null;
+        }
+        
+        // Завершаем до 100%
+        progressBar.style.width = '100%';
+        progressPercent.textContent = '100%';
+        loadingStatus.innerHTML = 'Готово!';
+        
+        // Плавно скрываем экран загрузки
+        setTimeout(() => {
+            loadingScreen.classList.add('hidden');
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        }, 500);
     }
 
     function loadSalesData() {
@@ -386,8 +641,26 @@
                 document.getElementById('main-tabs').style.display='flex';
                 document.getElementById('global-filters').style.display='grid';
                 switchTab('sales');
+                
+                // Скрываем экран загрузки после успешной загрузки
+                hideLoadingAnimation();
             })
-            .catch(e => { document.getElementById('loading').innerHTML = "Ошибка загрузки данных"; });
+            .catch(e => { 
+                if (dotsAnimationInterval) {
+                    clearInterval(dotsAnimationInterval);
+                    dotsAnimationInterval = null;
+                }
+                document.getElementById('loading').innerHTML = "Ошибка загрузки данных";
+                const loadingScreen = document.getElementById('loading-screen');
+                const loadingStatus = document.getElementById('loading-status');
+                loadingStatus.innerHTML = 'Ошибка загрузки данных';
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }, 1000);
+            });
     }
 
     function initApp() {
@@ -586,7 +859,15 @@
             if (category !== currentGroup) {
                 currentGroup = category;
                 let range = category === 'A' ? '0-80%' : (category === 'B' ? '80-95%' : '95-100%');
-                tbody.innerHTML += `<tr class="abc-group-header"><td colspan="5">Группа ${category} (${range})</td></tr>`;
+                let description = '';
+                if (category === 'A') {
+                    description = 'Лидеры продаж. Контролировать наличие всегда.';
+                } else if (category === 'B') {
+                    description = 'Средний спрос. Поддерживать запас.';
+                } else {
+                    description = 'Аутсайдеры. Заказывать под клиента.';
+                }
+                tbody.innerHTML += `<tr class="abc-group-header"><td colspan="5"><span class="abc-group-title">Группа ${category} (${range})</span><span class="abc-group-desc">${description}</span></td></tr>`;
             }
 
             tbody.innerHTML += `<tr><td><span class="prod-name">${item.name}</span></td><td class="num">${formatNum(item.value)}</td><td class="num num-light">${share.toFixed(1)}%</td><td class="num num-light">${accum.toFixed(1)}%</td><td class="num"><span class="${badgeClass}">Группа ${category}</span></td></tr>`;
