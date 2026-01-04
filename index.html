@@ -2270,15 +2270,18 @@
                 console.error('Error saving filter:', e);
             }
             
+            // Get current button from DOM (not the old reference)
+            const currentBtn = container.querySelector('.select-btn');
+            
             // Update button text
             if(checkedItems.length === 0) {
-                btn.innerText = "Выберите...";
+                currentBtn.innerText = "Выберите...";
             } else if (checkedItems.length === optionsList.length && optionsList.length > 1) {
-                btn.innerText = "Все выбраны";
+                currentBtn.innerText = "Все выбраны";
             } else if (checkedItems.length === 1) {
-                btn.innerText = values[0];
+                currentBtn.innerText = values[0];
             } else {
-                btn.innerText = `Выбрано (${checkedItems.length})`;
+                currentBtn.innerText = `Выбрано (${checkedItems.length})`;
             }
 
             // Update tags - always show individual tags with specific names
