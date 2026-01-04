@@ -56,10 +56,49 @@
         .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 5px rgba(222, 59, 32, 0.3); }
 
         /* Filters */
+        .filters-wrapper {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid #f1f3f9;
+            overflow: visible;
+            position: relative;
+        }
+        
+        .filters-header {
+            padding: 12px 15px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            font-weight: 700;
+            font-size: 13px;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+        
+        .filters-header::after {
+            content: '▼';
+            font-size: 11px;
+            transition: transform 0.3s;
+        }
+        
+        .filters-wrapper.collapsed .filters-header::after {
+            transform: rotate(-90deg);
+        }
+        
+        .filters-wrapper.collapsed .filters {
+            display: none;
+        }
+        
         .filters {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;
-            background: var(--white); padding: 15px; border-radius: var(--radius);
-            box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid #f1f3f9;
+            padding: 15px;
+            position: relative;
+            overflow: visible;
         }
         .filter-group label { display: block; font-size: 11px; color: var(--text-light); margin-bottom: 6px; text-transform: uppercase; font-weight: 700; }
 
@@ -68,7 +107,7 @@
         .select-btn { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 1px solid #e0e5ee; border-radius: 8px; background: #fff; cursor: pointer; font-size: 14px; font-weight: 500; min-height: 42px; }
         .select-btn::after { content: ""; width: 6px; height: 6px; border-right: 2px solid #8898aa; border-bottom: 2px solid #8898aa; transform: rotate(45deg); margin-left: 10px; transition: 0.2s; }
         .select-btn.open::after { transform: rotate(-135deg); }
-        .list-items { position: absolute; top: 105%; left: 0; width: 100%; background: #fff; border-radius: 8px; padding: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #f1f3f9; display: none; z-index: 200; max-height: 300px; overflow-y: auto; }
+        .list-items { position: absolute; top: 105%; left: 0; width: 100%; background: #fff; border-radius: 8px; padding: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #f1f3f9; display: none; z-index: 1000; max-height: 300px; overflow-y: auto; }
         .list-items.show { display: block; }
         .item { display: flex; align-items: center; padding: 8px 10px; cursor: pointer; border-radius: 6px; }
         .item:hover { background-color: #f6f9fc; }
@@ -138,11 +177,386 @@
         .bcg-item:last-child { border: none; }
         .bcg-growth.up { color: #2dce89; font-weight: bold; }
         .bcg-growth.down { color: #f5365c; font-weight: bold; }
+        
+        /* BCG Explanation */
+        .bcg-explanation {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid #f1f3f9;
+            margin-top: 30px;
+        }
+        
+        .bcg-explanation h4 {
+            margin: 0 0 20px 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .bcg-explanation h4::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        .bcg-explanation-content {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .explanation-section {
+            padding: 15px;
+            background: #f8f9fe;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .explanation-section strong {
+            display: block;
+            color: var(--text-dark);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        .explanation-section p {
+            margin: 6px 0;
+            font-size: 13px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .explanation-section .formula {
+            background: white;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 600;
+            margin: 8px 0;
+            border: 1px solid #e0e5ee;
+        }
+        
+        .explanation-list {
+            margin: 10px 0 0 0;
+            padding-left: 20px;
+        }
+        
+        .explanation-list li {
+            margin: 8px 0;
+            font-size: 13px;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .explanation-list li strong {
+            display: inline;
+            color: var(--text-dark);
+        }
 
         /* Trend Indicator */
         .trend-up { color: #2dce89; font-weight: 700; font-size: 12px; }
         .trend-down { color: #f5365c; font-weight: 700; font-size: 12px; }
         .trend-neutral { color: #8898aa; font-size: 12px; }
+
+        /* Compare View */
+        .compare-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+            align-items: start;
+        }
+        
+        .compare-side {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 0;
+            box-shadow: var(--shadow);
+            border: 1px solid #f1f3f9;
+            overflow: visible;
+            position: relative;
+        }
+        
+        .compare-side-header {
+            padding: 12px 15px;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+        
+        .compare-side-header h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .compare-side-header::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+        
+        .compare-side.collapsed .compare-side-header::after {
+            transform: rotate(-90deg);
+        }
+        
+        .compare-side.collapsed .compare-filters-wrapper {
+            display: none;
+        }
+        
+        .compare-filters-wrapper {
+            padding: 12px 15px;
+            overflow: visible;
+            position: relative;
+        }
+        
+        .compare-filters {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            overflow: visible;
+            position: relative;
+        }
+        
+        .compare-filters .filter-group label {
+            font-size: 10px;
+            margin-bottom: 4px;
+        }
+        
+        .compare-filters .multiselect .select-btn {
+            padding: 8px 10px;
+            font-size: 13px;
+            min-height: 36px;
+        }
+        
+        .compare-filters .selected-tags {
+            margin-top: 6px;
+        }
+        
+        .compare-filters .selected-tag {
+            font-size: 10px;
+            padding: 3px 6px;
+        }
+        
+        
+        .compare-header {
+            background: #f6f9fc;
+            text-align: center;
+            font-weight: 700;
+            color: var(--text-dark);
+            border-left: 2px solid #e0e5ee;
+            border-right: 2px solid #e0e5ee;
+        }
+        
+        #compareTable {
+            min-width: 1400px;
+        }
+        
+        #compareTable thead tr:first-child th {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+        }
+        
+        #compareTable thead tr:first-child th:first-child {
+            border-radius: 8px 0 0 0;
+        }
+        
+        #compareTable thead tr:first-child th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+        
+        .compare-change {
+            font-weight: 700;
+        }
+        
+        .compare-change.positive {
+            color: var(--green-text);
+        }
+        
+        .compare-change.negative {
+            color: var(--red-text);
+        }
+        
+        .compare-change.neutral {
+            color: var(--text-light);
+        }
+        
+        /* Compare Summary Table */
+        .compare-summary-container {
+            margin: 25px 0;
+        }
+        
+        .compare-summary-table {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid #f1f3f9;
+            overflow-x: auto;
+        }
+        
+        .compare-summary-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 800px;
+        }
+        
+        .compare-summary-table thead tr:first-child {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .compare-summary-table thead tr:first-child th {
+            padding: 12px 16px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        
+        .compare-summary-table thead tr:first-child th:first-child {
+            border-radius: 8px 0 0 0;
+            text-align: left;
+        }
+        
+        .compare-summary-table thead tr:first-child th:last-child {
+            border-radius: 0 8px 0 0;
+        }
+        
+        .compare-summary-table thead tr:last-child th {
+            padding: 10px 16px;
+            text-align: right;
+            background: #f6f9fc;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 10px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #eff2f7;
+        }
+        
+        .compare-summary-table thead tr:last-child th:first-child {
+            text-align: left;
+        }
+        
+        .compare-summary-table tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eff2f7;
+        }
+        
+        .compare-summary-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .compare-summary-table tbody tr:hover {
+            background-color: #f8f9fe;
+        }
+        
+        .compare-summary-table tbody td:first-child {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .compare-summary-table tbody .num {
+            font-weight: 600;
+        }
+        
+        .compare-kpi-badge {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-left: 6px;
+        }
+        
+        .compare-kpi-badge.badge-green {
+            background-color: var(--green-bg);
+            color: var(--green-text);
+        }
+        
+        .compare-kpi-badge.badge-orange {
+            background-color: var(--orange-bg);
+            color: var(--orange-text);
+        }
+        
+        .compare-kpi-badge.badge-red {
+            background-color: var(--red-bg);
+            color: var(--red-text);
+        }
+        
+        @media (max-width: 1200px) {
+            .compare-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .compare-kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .compare-kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .compare-kpi-card {
+                padding: 10px 12px;
+            }
+            
+            .compare-kpi-percent {
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .compare-kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .compare-kpi-card {
+                padding: 10px 12px;
+            }
+            
+            .compare-kpi-percent {
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .compare-side-header {
+                padding: 10px 12px;
+            }
+            
+            .compare-filters-wrapper {
+                padding: 10px 12px;
+            }
+            
+            .compare-filters .filter-group {
+                margin-bottom: 8px;
+            }
+        }
 
         /* Detail View */
         #detail-view { display: none; }
@@ -357,34 +771,40 @@
         <div class="tabs" id="main-tabs" style="display:none;">
             <button class="tab-btn active" onclick="switchTab('sales')">📊 Продажи</button>
             <button class="tab-btn" onclick="switchTab('abc')">🧠 ABC Анализ</button>
-            <button class="tab-btn" onclick="switchTab('bcg')">💠 BCG Матрица</button>
+            <!-- <button class="tab-btn" onclick="switchTab('bcg')">💠 BCG Матрица</button> -->
+            <button class="tab-btn" onclick="switchTab('compare')">⚖️ Сравнение</button>
         </div>
 
         <div id="loading">Загрузка данных...</div>
 
-        <div class="filters" id="global-filters" style="display:none;">
-            <div class="filter-group">
-                <label>Регион(ы)</label>
-                <div class="multiselect" id="region-multiselect">
-                    <div class="select-btn">Все регионы</div>
-                    <div class="list-items"></div>
-                    <div class="selected-tags"></div>
-                </div>
+        <div class="filters-wrapper" id="global-filters-wrapper" style="display:none;">
+            <div class="filters-header" onclick="toggleFilters(this)">
+                Фильтры
             </div>
-            <div class="filter-group">
-                <label>Группа(ы)</label>
-                <div class="multiselect" id="group-multiselect">
-                    <div class="select-btn">Все группы</div>
-                    <div class="list-items"></div>
-                    <div class="selected-tags"></div>
+            <div class="filters" id="global-filters">
+                <div class="filter-group">
+                    <label>Регион(ы)</label>
+                    <div class="multiselect" id="region-multiselect">
+                        <div class="select-btn">Все регионы</div>
+                        <div class="list-items"></div>
+                        <div class="selected-tags"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="filter-group">
-                <label>Месяц(ы)</label>
-                <div class="multiselect" id="month-multiselect">
-                    <div class="select-btn">Выберите месяц</div>
-                    <div class="list-items"></div>
-                    <div class="selected-tags"></div>
+                <div class="filter-group">
+                    <label>Группа(ы)</label>
+                    <div class="multiselect" id="group-multiselect">
+                        <div class="select-btn">Все группы</div>
+                        <div class="list-items"></div>
+                        <div class="selected-tags"></div>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Месяц(ы)</label>
+                    <div class="multiselect" id="month-multiselect">
+                        <div class="select-btn">Выберите месяц</div>
+                        <div class="list-items"></div>
+                        <div class="selected-tags"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -461,6 +881,197 @@
                     <ul class="bcg-list" id="bcg-list-dogs"></ul>
                 </div>
             </div>
+            
+            <div class="bcg-explanation">
+                <h4>📋 Как рассчитывается BCG Матрица</h4>
+                <div class="bcg-explanation-content">
+                    <div class="explanation-section">
+                        <strong>Доля рынка (Доля %):</strong>
+                        <p>Показывает процентную долю продаж препарата от общего объема продаж всех препаратов в выбранном периоде.</p>
+                        <p class="formula">Формула: (Продажи препарата / Общий объем продаж всех препаратов) × 100%</p>
+                        <p>Препарат считается с <strong>высокой долей</strong>, если его доля больше или равна средней доле рынка (средняя доля = 100% / количество препаратов).</p>
+                    </div>
+                    
+                    <div class="explanation-section">
+                        <strong>Темп роста (Рост %):</strong>
+                        <p>Показывает процент изменения продаж препарата по сравнению с предыдущим месяцем.</p>
+                        <p class="formula">Формула: ((Продажи в выбранном периоде - Продажи в предыдущем месяце) / Продажи в предыдущем месяце) × 100%</p>
+                        <p>Если выбран несколько месяцев, сравнивается сумма продаж за выбранные месяцы с продажами за предыдущий месяц перед первым выбранным месяцем.</p>
+                        <p>Препарат считается с <strong>высоким ростом</strong>, если темп роста ≥ 0% (положительный или нулевой рост).</p>
+                    </div>
+                    
+                    <div class="explanation-section">
+                        <strong>Классификация по квадрантам:</strong>
+                        <ul class="explanation-list">
+                            <li><strong>⭐ Звезды:</strong> Высокая доля рынка + Высокий рост (≥ 0%)</li>
+                            <li><strong>🐮 Дойные коровы:</strong> Высокая доля рынка + Низкий рост (< 0%)</li>
+                            <li><strong>❓ Трудные дети:</strong> Низкая доля рынка + Высокий рост (≥ 0%)</li>
+                            <li><strong>🐕 Собаки:</strong> Низкая доля рынка + Низкий рост (< 0%)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="explanation-section">
+                        <strong>Используемые данные:</strong>
+                        <p>Для расчета используются данные о <strong>фактических продажах по сумме (Факт (С))</strong> за выбранные месяцы в фильтрах.</p>
+                        <p>В расчет включаются только препараты с продажами больше нуля в выбранном периоде.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="compare-view" style="display:none;">
+            <h3>Сравнение периодов</h3>
+            
+            <div class="compare-container">
+                <div class="compare-side">
+                    <div class="compare-side-header" onclick="toggleCompareSide(this, 'compare-period1')">
+                        <h4>Период 1</h4>
+                    </div>
+                    <div class="compare-filters-wrapper">
+                        <div class="filters compare-filters">
+                            <div class="filter-group">
+                                <label>Месяц</label>
+                                <div class="multiselect" id="compare-month1-multiselect">
+                                    <div class="select-btn">Выберите месяц</div>
+                                    <div class="list-items"></div>
+                                    <div class="selected-tags"></div>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <label>Группа(ы)</label>
+                                <div class="multiselect" id="compare-group1-multiselect">
+                                    <div class="select-btn">Все группы</div>
+                                    <div class="list-items"></div>
+                                    <div class="selected-tags"></div>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <label>Регион(ы)</label>
+                                <div class="multiselect" id="compare-region1-multiselect">
+                                    <div class="select-btn">Все регионы</div>
+                                    <div class="list-items"></div>
+                                    <div class="selected-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="compare-side">
+                    <div class="compare-side-header" onclick="toggleCompareSide(this, 'compare-period2')">
+                        <h4>Период 2</h4>
+                    </div>
+                    <div class="compare-filters-wrapper">
+                        <div class="filters compare-filters">
+                            <div class="filter-group">
+                                <label>Месяц</label>
+                                <div class="multiselect" id="compare-month2-multiselect">
+                                    <div class="select-btn">Выберите месяц</div>
+                                    <div class="list-items"></div>
+                                    <div class="selected-tags"></div>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <label>Группа(ы)</label>
+                                <div class="multiselect" id="compare-group2-multiselect">
+                                    <div class="select-btn">Все группы</div>
+                                    <div class="list-items"></div>
+                                    <div class="selected-tags"></div>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <label>Регион(ы)</label>
+                                <div class="multiselect" id="compare-region2-multiselect">
+                                    <div class="select-btn">Все регионы</div>
+                                    <div class="list-items"></div>
+                                    <div class="selected-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="compare-summary-container" id="compare-kpi-container" style="display:none;">
+                <div class="compare-summary-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Показатель</th>
+                                <th colspan="3" class="compare-header" id="compare-summary-header-1">Период 1</th>
+                                <th colspan="3" class="compare-header" id="compare-summary-header-2">Период 2</th>
+                                <th colspan="2" class="compare-header">Изменение</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th class="num">План</th>
+                                <th class="num">Факт</th>
+                                <th class="num">%</th>
+                                <th class="num">План</th>
+                                <th class="num">Факт</th>
+                                <th class="num">%</th>
+                                <th class="num">Разница</th>
+                                <th class="num">%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>План (Кол)</strong></td>
+                                <td class="num num-light" id="compare-p1-qty-plan">0</td>
+                                <td class="num" id="compare-p1-qty-fact">0</td>
+                                <td class="num"><span id="compare-p1-qty-perc">0%</span> <span class="compare-kpi-badge" id="compare-p1-qty-badge">—</span></td>
+                                <td class="num num-light" id="compare-p2-qty-plan">0</td>
+                                <td class="num" id="compare-p2-qty-fact">0</td>
+                                <td class="num"><span id="compare-p2-qty-perc">0%</span> <span class="compare-kpi-badge" id="compare-p2-qty-badge">—</span></td>
+                                <td class="num compare-change" id="compare-diff-qty">0</td>
+                                <td class="num compare-change" id="compare-diff-qty-perc">0%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>План (Сум)</strong></td>
+                                <td class="num num-light" id="compare-p1-sum-plan">0</td>
+                                <td class="num" id="compare-p1-sum-fact">0</td>
+                                <td class="num"><span id="compare-p1-sum-perc">0%</span> <span class="compare-kpi-badge" id="compare-p1-sum-badge">—</span></td>
+                                <td class="num num-light" id="compare-p2-sum-plan">0</td>
+                                <td class="num" id="compare-p2-sum-fact">0</td>
+                                <td class="num"><span id="compare-p2-sum-perc">0%</span> <span class="compare-kpi-badge" id="compare-p2-sum-badge">—</span></td>
+                                <td class="num compare-change" id="compare-diff-sum">0</td>
+                                <td class="num compare-change" id="compare-diff-sum-perc">0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px;">Таблица сравнения</h3>
+            <div class="table-wrapper">
+                <table id="compareTable">
+                    <thead>
+                        <tr>
+                            <th>Препарат</th>
+                            <th colspan="5" class="compare-header" id="compare-header-1">Период 1</th>
+                            <th colspan="5" class="compare-header" id="compare-header-2">Период 2</th>
+                            <th colspan="3" class="compare-header">Изменение</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th class="num">План (К)</th>
+                            <th class="num">Факт (К)</th>
+                            <th class="num">%</th>
+                            <th class="num">План (С)</th>
+                            <th class="num">Факт (С)</th>
+                            <th class="num">План (К)</th>
+                            <th class="num">Факт (К)</th>
+                            <th class="num">%</th>
+                            <th class="num">План (С)</th>
+                            <th class="num">Факт (С)</th>
+                            <th class="num">Кол-во</th>
+                            <th class="num">Сумма</th>
+                            <th class="num">%</th>
+                        </tr>
+                    </thead>
+                    <tbody id="compareBody"></tbody>
+                </table>
+            </div>
         </div>
 
         <div id="detail-view">
@@ -495,6 +1106,14 @@
     let selectedMonths = []; 
     let currentDetailProduct = null;
     let currentTab = 'sales';
+    
+    // Compare filters
+    let compareMonth1 = [];
+    let compareGroup1 = [];
+    let compareRegion1 = [];
+    let compareMonth2 = [];
+    let compareGroup2 = [];
+    let compareRegion2 = [];
 
     window.onload = function() {
         const savedUser = localStorage.getItem('belindaUser');
@@ -659,7 +1278,11 @@
                 initApp();
                 document.getElementById('loading').style.display='none';
                 document.getElementById('main-tabs').style.display='flex';
-                document.getElementById('global-filters').style.display='grid';
+                document.getElementById('global-filters-wrapper').style.display='block';
+                
+                // Load saved filter states
+                loadFilterStates();
+                
                 switchTab('sales');
                 
                 // Скрываем экран загрузки после успешной загрузки
@@ -697,17 +1320,102 @@
         setupMultiSelect('group-multiselect', allowedGroups, (selected) => { selectedGroups = selected; updateAll(); }, true);
 
         setupMultiSelect('month-multiselect', allData.filters.months, (selected) => { selectedMonths = selected; updateAll(); }, false); 
+        // Auto-select first month only if no saved selection exists
         if(allData.filters.months.length > 0) {
             setTimeout(() => {
-                const mContainer = document.getElementById('month-multiselect');
-                const items = mContainer.querySelectorAll('.item');
-                if(items.length > 1) items[1].click(); 
-            }, 100);
+                try {
+                    const saved = localStorage.getItem('filter_month-multiselect');
+                    if (!saved || JSON.parse(saved).length === 0) {
+                        const mContainer = document.getElementById('month-multiselect');
+                        const items = mContainer.querySelectorAll('.item');
+                        if(items.length > 1) items[1].click();
+                    } else {
+                        // If saved values exist, ensure variables are updated
+                        const savedValues = JSON.parse(saved);
+                        selectedMonths = savedValues.filter(m => allData.filters.months.includes(m));
+                        updateAll();
+                    }
+                } catch(e) {
+                    // If error, select first month as fallback
+                    const mContainer = document.getElementById('month-multiselect');
+                    const items = mContainer.querySelectorAll('.item');
+                    if(items.length > 1) items[1].click();
+                }
+            }, 150);
+        } else {
+            // If no months available, still try to restore saved values
+            setTimeout(() => {
+                try {
+                    const saved = localStorage.getItem('filter_month-multiselect');
+                    if (saved) {
+                        const savedValues = JSON.parse(saved);
+                        selectedMonths = savedValues.filter(m => allData.filters.months.includes(m));
+                        if(selectedMonths.length > 0) updateAll();
+                    }
+                } catch(e) {
+                    // Ignore errors
+                }
+            }, 150);
         }
 
         document.getElementById('productSelector').addEventListener('change', (e) => {
             renderDetailTable(e.target.value);
         });
+        
+        // Initialize compare filters
+        initCompareFilters();
+    }
+    
+    function initCompareFilters() {
+        let allowedRegions = [];
+        let uReg = currentUser.region || "";
+        if (!uReg || uReg.toLowerCase().includes('админ')) { 
+            allowedRegions = allData.filters.regions; 
+        } else { 
+            let userRegs = uReg.split(',').map(s => s.trim()); 
+            allowedRegions = allData.filters.regions.filter(r => userRegs.includes(r)); 
+        }
+        
+        let allowedGroups = [];
+        let uGrp = currentUser.group || "";
+        if (!uGrp || uGrp.toLowerCase().includes('админ')) { 
+            allowedGroups = allData.filters.groups; 
+        } else { 
+            let userGrps = uGrp.split(',').map(s => s.trim()); 
+            allowedGroups = allData.filters.groups.filter(g => userGrps.includes(g)); 
+        }
+        
+        // Period 1 filters
+        setupMultiSelect('compare-month1-multiselect', allData.filters.months, (selected) => { 
+            compareMonth1 = selected; 
+            updateCompare(); 
+        }, false);
+        
+        setupMultiSelect('compare-group1-multiselect', allowedGroups, (selected) => { 
+            compareGroup1 = selected; 
+            updateCompare(); 
+        }, true);
+        
+        setupMultiSelect('compare-region1-multiselect', allowedRegions, (selected) => { 
+            compareRegion1 = selected; 
+            updateCompare(); 
+        }, true);
+        
+        // Period 2 filters
+        setupMultiSelect('compare-month2-multiselect', allData.filters.months, (selected) => { 
+            compareMonth2 = selected; 
+            updateCompare(); 
+        }, false);
+        
+        setupMultiSelect('compare-group2-multiselect', allowedGroups, (selected) => { 
+            compareGroup2 = selected; 
+            updateCompare(); 
+        }, true);
+        
+        setupMultiSelect('compare-region2-multiselect', allowedRegions, (selected) => { 
+            compareRegion2 = selected; 
+            updateCompare(); 
+        }, true);
     }
 
     // --- Tab Switching ---
@@ -715,7 +1423,15 @@
         currentTab = tab;
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         
-        ['dashboard-view', 'abc-view', 'bcg-view', 'detail-view'].forEach(id => document.getElementById(id).style.display = 'none');
+        ['dashboard-view', 'abc-view', 'bcg-view', 'compare-view', 'detail-view'].forEach(id => document.getElementById(id).style.display = 'none');
+
+        // Show/hide global filters based on tab
+        const globalFiltersWrapper = document.getElementById('global-filters-wrapper');
+        if (tab === 'compare') {
+            globalFiltersWrapper.style.display = 'none';
+        } else {
+            globalFiltersWrapper.style.display = 'block';
+        }
 
         if (tab === 'sales') {
             document.querySelector("button[onclick=\"switchTab('sales')\"]").classList.add('active');
@@ -723,11 +1439,66 @@
         } else if (tab === 'abc') {
             document.querySelector("button[onclick=\"switchTab('abc')\"]").classList.add('active');
             document.getElementById('abc-view').style.display = 'block';
-        } else if (tab === 'bcg') {
-            document.querySelector("button[onclick=\"switchTab('bcg')\"]").classList.add('active');
-            document.getElementById('bcg-view').style.display = 'block';
+        } else if (tab === 'compare') {
+            document.querySelector("button[onclick=\"switchTab('compare')\"]").classList.add('active');
+            document.getElementById('compare-view').style.display = 'block';
         }
         updateAll();
+    }
+    
+    function toggleFilters(header) {
+        const wrapper = header.closest('.filters-wrapper');
+        wrapper.classList.toggle('collapsed');
+        saveFilterState('global-filters', wrapper.classList.contains('collapsed'));
+    }
+    
+    function toggleCompareSide(header, key) {
+        const side = header.closest('.compare-side');
+        side.classList.toggle('collapsed');
+        saveFilterState(key, side.classList.contains('collapsed'));
+    }
+    
+    function saveFilterState(key, isCollapsed) {
+        try {
+            const states = JSON.parse(localStorage.getItem('filterStates') || '{}');
+            states[key] = isCollapsed;
+            localStorage.setItem('filterStates', JSON.stringify(states));
+        } catch(e) {
+            console.error('Error saving filter state:', e);
+        }
+    }
+    
+    function loadFilterStates() {
+        try {
+            const states = JSON.parse(localStorage.getItem('filterStates') || '{}');
+            
+            // Load global filters state
+            const globalWrapper = document.getElementById('global-filters-wrapper');
+            if (globalWrapper && states['global-filters']) {
+                globalWrapper.classList.toggle('collapsed', states['global-filters']);
+            } else {
+                // Default: collapsed
+                if (globalWrapper) globalWrapper.classList.add('collapsed');
+            }
+            
+            // Load compare periods states
+            const period1 = document.querySelector('.compare-side:first-child');
+            const period2 = document.querySelector('.compare-side:last-child');
+            
+            if (period1 && states['compare-period1']) {
+                period1.classList.toggle('collapsed', states['compare-period1']);
+            } else {
+                if (period1) period1.classList.add('collapsed');
+            }
+            
+            if (period2 && states['compare-period2']) {
+                period2.classList.toggle('collapsed', states['compare-period2']);
+            } else {
+                if (period2) period2.classList.add('collapsed');
+            }
+        } catch(e) {
+            console.error('Error loading filter states:', e);
+        }
     }
 
     // --- Core Logic ---
@@ -766,13 +1537,415 @@
             renderSummary(aggregatedProducts, true);
         } else if (currentTab === 'abc') {
             renderABC(aggregatedProducts);
-        } else if (currentTab === 'bcg') {
-            renderBCG(aggregatedProducts);
+        } else if (currentTab === 'compare') {
+            updateCompare();
         }
         
         if(document.getElementById('detail-view').style.display === 'block' && currentDetailProduct) {
             renderDetailTable(currentDetailProduct);
         }
+    }
+    
+    function getCompareProducts(regions, groups, months) {
+        let filtered = allData.products.filter(p => {
+            const regionMatch = regions.length === 0 || regions.includes(p.region);
+            const groupMatch = groups.length === 0 || groups.includes(p.group);
+            return regionMatch && groupMatch;
+        });
+
+        let grouped = {};
+        filtered.forEach(p => {
+            if (!grouped[p.name]) {
+                grouped[p.name] = { name: p.name, salesData: {} };
+                allData.filters.months.forEach(m => { 
+                    grouped[p.name].salesData[m] = { pl_qty:0, fc_qty:0, pl_sum:0, fc_sum:0 }; 
+                });
+            }
+            months.forEach(m => {
+                let s = p.salesData[m];
+                if(s) {
+                    grouped[p.name].salesData[m].pl_qty += Number(s.pl_qty)||0;
+                    grouped[p.name].salesData[m].fc_qty += Number(s.fc_qty)||0;
+                    grouped[p.name].salesData[m].pl_sum += Number(s.pl_sum)||0;
+                    grouped[p.name].salesData[m].fc_sum += Number(s.fc_sum)||0;
+                }
+            });
+        });
+        return Object.values(grouped);
+    }
+    
+    function updateCompareKPI(p1_total, p2_total) {
+        const kpiContainer = document.getElementById('compare-kpi-container');
+        if (!kpiContainer) return;
+        
+        // Calculate percentages for Period 1
+        const p1_qty_perc = p1_total.pl_qty > 0 ? (p1_total.fc_qty / p1_total.pl_qty) * 100 : 0;
+        const p1_sum_perc = p1_total.pl_sum > 0 ? (p1_total.fc_sum / p1_total.pl_sum) * 100 : 0;
+        
+        // Calculate percentages for Period 2
+        const p2_qty_perc = p2_total.pl_qty > 0 ? (p2_total.fc_qty / p2_total.pl_qty) * 100 : 0;
+        const p2_sum_perc = p2_total.pl_sum > 0 ? (p2_total.fc_sum / p2_total.pl_sum) * 100 : 0;
+        
+        // Calculate differences
+        const diff_qty = p2_total.fc_qty - p1_total.fc_qty;
+        const diff_sum = p2_total.fc_sum - p1_total.fc_sum;
+        const diff_qty_perc = p1_total.fc_qty > 0 ? ((diff_qty / p1_total.fc_qty) * 100) : 0;
+        const diff_sum_perc = p1_total.fc_sum > 0 ? ((diff_sum / p1_total.fc_sum) * 100) : 0;
+        
+        // Update Period 1 - Quantity
+        document.getElementById('compare-p1-qty-plan').innerText = formatNum(p1_total.pl_qty);
+        document.getElementById('compare-p1-qty-fact').innerText = formatNum(p1_total.fc_qty);
+        document.getElementById('compare-p1-qty-perc').innerText = p1_qty_perc.toFixed(1) + '%';
+        updateCompareKPICard('compare-p1-qty', p1_qty_perc);
+        
+        // Update Period 1 - Sum
+        document.getElementById('compare-p1-sum-plan').innerText = formatNum(p1_total.pl_sum);
+        document.getElementById('compare-p1-sum-fact').innerText = formatNum(p1_total.fc_sum);
+        document.getElementById('compare-p1-sum-perc').innerText = p1_sum_perc.toFixed(1) + '%';
+        updateCompareKPICard('compare-p1-sum', p1_sum_perc);
+        
+        // Update Period 2 - Quantity
+        document.getElementById('compare-p2-qty-plan').innerText = formatNum(p2_total.pl_qty);
+        document.getElementById('compare-p2-qty-fact').innerText = formatNum(p2_total.fc_qty);
+        document.getElementById('compare-p2-qty-perc').innerText = p2_qty_perc.toFixed(1) + '%';
+        updateCompareKPICard('compare-p2-qty', p2_qty_perc);
+        
+        // Update Period 2 - Sum
+        document.getElementById('compare-p2-sum-plan').innerText = formatNum(p2_total.pl_sum);
+        document.getElementById('compare-p2-sum-fact').innerText = formatNum(p2_total.fc_sum);
+        document.getElementById('compare-p2-sum-perc').innerText = p2_sum_perc.toFixed(1) + '%';
+        updateCompareKPICard('compare-p2-sum', p2_sum_perc);
+        
+        // Update Differences - Quantity
+        document.getElementById('compare-diff-qty-p1').innerText = formatNum(p1_total.fc_qty);
+        document.getElementById('compare-diff-qty-p2').innerText = formatNum(p2_total.fc_qty);
+        const diffQtyText = (diff_qty >= 0 ? '+' : '') + formatNum(diff_qty);
+        document.getElementById('compare-diff-qty-perc').innerText = diffQtyText;
+        document.getElementById('compare-diff-qty-badge').innerText = diff_qty_perc >= 0 ? '▲' : '▼';
+        updateCompareKPICard('compare-diff-qty', diff_qty_perc, true);
+        
+        // Update Differences - Sum
+        document.getElementById('compare-diff-sum-p1').innerText = formatNum(p1_total.fc_sum);
+        document.getElementById('compare-diff-sum-p2').innerText = formatNum(p2_total.fc_sum);
+        const diffSumText = (diff_sum >= 0 ? '+' : '') + formatNum(diff_sum);
+        document.getElementById('compare-diff-sum-perc').innerText = diffSumText;
+        document.getElementById('compare-diff-sum-badge').innerText = diff_sum_perc >= 0 ? '▲' : '▼';
+        updateCompareKPICard('compare-diff-sum', diff_sum_perc, true);
+        
+        kpiContainer.style.display = 'block';
+    }
+    
+    function updateCompareKPICard(cardPrefix, percentage, isDiff = false) {
+        const badge = document.getElementById(`${cardPrefix}-badge`);
+        if (!badge) return;
+        
+        const card = badge.closest('.compare-kpi-card');
+        if (!card) return;
+        
+        card.className = 'compare-kpi-card';
+        
+        if (isDiff) {
+            // For difference cards, use blue for neutral, green for positive, red for negative
+            if (percentage > 0) {
+                card.classList.add('status-green');
+                badge.className = 'compare-kpi-badge badge-green';
+            } else if (percentage < 0) {
+                card.classList.add('status-red');
+                badge.className = 'compare-kpi-badge badge-red';
+            } else {
+                card.classList.add('status-blue');
+                badge.className = 'compare-kpi-badge badge-orange';
+            }
+        } else {
+            // For regular KPI cards
+            if (percentage >= 100) {
+                card.classList.add('status-green');
+                badge.className = 'compare-kpi-badge badge-green';
+                badge.innerText = 'Отлично';
+            } else if (percentage >= 50) {
+                card.classList.add('status-orange');
+                badge.className = 'compare-kpi-badge badge-orange';
+                badge.innerText = 'Норма';
+            } else {
+                card.classList.add('status-red');
+                badge.className = 'compare-kpi-badge badge-red';
+                badge.innerText = 'Внимание';
+            }
+        }
+    }
+    
+    function updateCompareSummary(p1_total, p2_total) {
+        const kpiContainer = document.getElementById('compare-kpi-container');
+        if (!kpiContainer) return;
+        
+        // Update headers with selected months
+        const header1 = document.getElementById('compare-summary-header-1');
+        const header2 = document.getElementById('compare-summary-header-2');
+        
+        if (compareMonth1.length > 0) {
+            header1.textContent = `Период 1 (${compareMonth1.join(', ')})`;
+        } else {
+            header1.textContent = 'Период 1';
+        }
+        
+        if (compareMonth2.length > 0) {
+            header2.textContent = `Период 2 (${compareMonth2.join(', ')})`;
+        } else {
+            header2.textContent = 'Период 2';
+        }
+        
+        // Calculate percentages for Period 1
+        const p1_qty_perc = p1_total.pl_qty > 0 ? (p1_total.fc_qty / p1_total.pl_qty) * 100 : 0;
+        const p1_sum_perc = p1_total.pl_sum > 0 ? (p1_total.fc_sum / p1_total.pl_sum) * 100 : 0;
+        
+        // Calculate percentages for Period 2
+        const p2_qty_perc = p2_total.pl_qty > 0 ? (p2_total.fc_qty / p2_total.pl_qty) * 100 : 0;
+        const p2_sum_perc = p2_total.pl_sum > 0 ? (p2_total.fc_sum / p2_total.pl_sum) * 100 : 0;
+        
+        // Calculate differences
+        const diff_qty = p2_total.fc_qty - p1_total.fc_qty;
+        const diff_sum = p2_total.fc_sum - p1_total.fc_sum;
+        
+        // Update Period 1 - Quantity
+        document.getElementById('compare-p1-qty-plan').innerText = formatNum(p1_total.pl_qty);
+        document.getElementById('compare-p1-qty-fact').innerText = formatNum(p1_total.fc_qty);
+        document.getElementById('compare-p1-qty-perc').innerText = p1_qty_perc.toFixed(1) + '%';
+        updateCompareBadge('compare-p1-qty-badge', p1_qty_perc);
+        
+        // Update Period 1 - Sum
+        document.getElementById('compare-p1-sum-plan').innerText = formatNum(p1_total.pl_sum);
+        document.getElementById('compare-p1-sum-fact').innerText = formatNum(p1_total.fc_sum);
+        document.getElementById('compare-p1-sum-perc').innerText = p1_sum_perc.toFixed(1) + '%';
+        updateCompareBadge('compare-p1-sum-badge', p1_sum_perc);
+        
+        // Update Period 2 - Quantity
+        document.getElementById('compare-p2-qty-plan').innerText = formatNum(p2_total.pl_qty);
+        document.getElementById('compare-p2-qty-fact').innerText = formatNum(p2_total.fc_qty);
+        document.getElementById('compare-p2-qty-perc').innerText = p2_qty_perc.toFixed(1) + '%';
+        updateCompareBadge('compare-p2-qty-badge', p2_qty_perc);
+        
+        // Update Period 2 - Sum
+        document.getElementById('compare-p2-sum-plan').innerText = formatNum(p2_total.pl_sum);
+        document.getElementById('compare-p2-sum-fact').innerText = formatNum(p2_total.fc_sum);
+        document.getElementById('compare-p2-sum-perc').innerText = p2_sum_perc.toFixed(1) + '%';
+        updateCompareBadge('compare-p2-sum-badge', p2_sum_perc);
+        
+        // Update Differences - Quantity (absolute)
+        const diffQtyText = (diff_qty >= 0 ? '+' : '') + formatNum(diff_qty);
+        const diffQtyElement = document.getElementById('compare-diff-qty');
+        diffQtyElement.innerText = diffQtyText;
+        diffQtyElement.className = 'num compare-change' + (diff_qty > 0 ? ' positive' : (diff_qty < 0 ? ' negative' : ' neutral'));
+        
+        // Update Differences - Quantity (percentage)
+        const qtyPercChange = p1_total.fc_qty > 0 ? ((diff_qty / p1_total.fc_qty) * 100) : 0;
+        const diffQtyPercText = (qtyPercChange >= 0 ? '+' : '') + qtyPercChange.toFixed(1) + '%';
+        const diffQtyPercElement = document.getElementById('compare-diff-qty-perc');
+        diffQtyPercElement.innerText = diffQtyPercText;
+        diffQtyPercElement.className = 'num compare-change' + (qtyPercChange > 0 ? ' positive' : (qtyPercChange < 0 ? ' negative' : ' neutral'));
+        
+        // Update Differences - Sum (absolute)
+        const diffSumText = (diff_sum >= 0 ? '+' : '') + formatNum(diff_sum);
+        const diffSumElement = document.getElementById('compare-diff-sum');
+        diffSumElement.innerText = diffSumText;
+        diffSumElement.className = 'num compare-change' + (diff_sum > 0 ? ' positive' : (diff_sum < 0 ? ' negative' : ' neutral'));
+        
+        // Update Differences - Sum (percentage)
+        const sumPercChange = p1_total.fc_sum > 0 ? ((diff_sum / p1_total.fc_sum) * 100) : 0;
+        const diffSumPercText = (sumPercChange >= 0 ? '+' : '') + sumPercChange.toFixed(1) + '%';
+        const diffSumPercElement = document.getElementById('compare-diff-sum-perc');
+        diffSumPercElement.innerText = diffSumPercText;
+        diffSumPercElement.className = 'num compare-change' + (sumPercChange > 0 ? ' positive' : (sumPercChange < 0 ? ' negative' : ' neutral'));
+        
+        kpiContainer.style.display = 'block';
+    }
+    
+    function updateCompareBadge(badgeId, value, isDiff = false) {
+        const badge = document.getElementById(badgeId);
+        if (!badge) return;
+        
+        badge.className = 'compare-kpi-badge';
+        
+        if (isDiff) {
+            // For difference badges
+            if (value > 0) {
+                badge.classList.add('badge-green');
+                badge.innerText = '▲';
+            } else if (value < 0) {
+                badge.classList.add('badge-red');
+                badge.innerText = '▼';
+            } else {
+                badge.classList.add('badge-orange');
+                badge.innerText = '—';
+            }
+        } else {
+            // For regular KPI badges
+            if (value >= 100) {
+                badge.classList.add('badge-green');
+                badge.innerText = 'Отлично';
+            } else if (value >= 50) {
+                badge.classList.add('badge-orange');
+                badge.innerText = 'Норма';
+            } else {
+                badge.classList.add('badge-red');
+                badge.innerText = 'Внимание';
+            }
+        }
+    }
+    
+    function updateCompare() {
+        if (currentTab !== 'compare') return;
+        
+        // Update headers with selected months
+        const header1 = document.getElementById('compare-header-1');
+        const header2 = document.getElementById('compare-header-2');
+        
+        if (compareMonth1.length > 0) {
+            header1.textContent = `Период 1 (${compareMonth1.join(', ')})`;
+        } else {
+            header1.textContent = 'Период 1';
+        }
+        
+        if (compareMonth2.length > 0) {
+            header2.textContent = `Период 2 (${compareMonth2.join(', ')})`;
+        } else {
+            header2.textContent = 'Период 2';
+        }
+        
+        // Validate that we have at least one month selected for each period
+        if (compareMonth1.length === 0 || compareMonth2.length === 0) {
+            document.getElementById('compareBody').innerHTML = '<tr><td colspan="13" style="text-align:center; padding: 20px; color: var(--text-light);">Выберите месяцы для обоих периодов</td></tr>';
+            document.getElementById('compare-kpi-container').style.display = 'none';
+            return;
+        }
+        
+        // Get products for period 1
+        const products1 = getCompareProducts(compareRegion1, compareGroup1, compareMonth1);
+        
+        // Get products for period 2
+        const products2 = getCompareProducts(compareRegion2, compareGroup2, compareMonth2);
+        
+        // Calculate totals for KPI cards
+        let p1_total = { pl_qty: 0, fc_qty: 0, pl_sum: 0, fc_sum: 0 };
+        products1.forEach(p => {
+            compareMonth1.forEach(m => {
+                let s = p.salesData[m];
+                if (s) {
+                    p1_total.pl_qty += s.pl_qty || 0;
+                    p1_total.fc_qty += s.fc_qty || 0;
+                    p1_total.pl_sum += s.pl_sum || 0;
+                    p1_total.fc_sum += s.fc_sum || 0;
+                }
+            });
+        });
+        
+        let p2_total = { pl_qty: 0, fc_qty: 0, pl_sum: 0, fc_sum: 0 };
+        products2.forEach(p => {
+            compareMonth2.forEach(m => {
+                let s = p.salesData[m];
+                if (s) {
+                    p2_total.pl_qty += s.pl_qty || 0;
+                    p2_total.fc_qty += s.fc_qty || 0;
+                    p2_total.pl_sum += s.pl_sum || 0;
+                    p2_total.fc_sum += s.fc_sum || 0;
+                }
+            });
+        });
+        
+        // Update summary table
+        updateCompareSummary(p1_total, p2_total);
+        
+        // Combine all unique product names
+        const allProductNames = new Set();
+        products1.forEach(p => allProductNames.add(p.name));
+        products2.forEach(p => allProductNames.add(p.name));
+        
+        const tbody = document.getElementById('compareBody');
+        tbody.innerHTML = '';
+        
+        if (allProductNames.size === 0) {
+            tbody.innerHTML = '<tr><td colspan="14" style="text-align:center; padding: 20px;">Нет данных для сравнения</td></tr>';
+            return;
+        }
+        
+        // Aggregate data for each period
+        const data1 = {};
+        products1.forEach(p => {
+            let total = { pl_qty: 0, fc_qty: 0, pl_sum: 0, fc_sum: 0 };
+            compareMonth1.forEach(m => {
+                let s = p.salesData[m];
+                if (s) {
+                    total.pl_qty += s.pl_qty || 0;
+                    total.fc_qty += s.fc_qty || 0;
+                    total.pl_sum += s.pl_sum || 0;
+                    total.fc_sum += s.fc_sum || 0;
+                }
+            });
+            data1[p.name] = total;
+        });
+        
+        const data2 = {};
+        products2.forEach(p => {
+            let total = { pl_qty: 0, fc_qty: 0, pl_sum: 0, fc_sum: 0 };
+            compareMonth2.forEach(m => {
+                let s = p.salesData[m];
+                if (s) {
+                    total.pl_qty += s.pl_qty || 0;
+                    total.fc_qty += s.fc_qty || 0;
+                    total.pl_sum += s.pl_sum || 0;
+                    total.fc_sum += s.fc_sum || 0;
+                }
+            });
+            data2[p.name] = total;
+        });
+        
+        // Render comparison table
+        Array.from(allProductNames).sort().forEach(productName => {
+            const p1 = data1[productName] || { pl_qty: 0, fc_qty: 0, pl_sum: 0, fc_sum: 0 };
+            const p2 = data2[productName] || { pl_qty: 0, fc_qty: 0, pl_sum: 0, fc_sum: 0 };
+            
+            // Calculate percentages
+            const p1_qty_perc = p1.pl_qty > 0 ? (p1.fc_qty / p1.pl_qty) * 100 : 0;
+            const p1_sum_perc = p1.pl_sum > 0 ? (p1.fc_sum / p1.pl_sum) * 100 : 0;
+            const p2_qty_perc = p2.pl_qty > 0 ? (p2.fc_qty / p2.pl_qty) * 100 : 0;
+            const p2_sum_perc = p2.pl_sum > 0 ? (p2.fc_sum / p2.pl_sum) * 100 : 0;
+            
+            // Calculate changes
+            const qtyChange = p2.fc_qty - p1.fc_qty;
+            const sumChange = p2.fc_sum - p1.fc_sum;
+            
+            // Calculate percentage changes
+            const qtyPercChange = p1.fc_qty > 0 ? ((qtyChange / p1.fc_qty) * 100) : 0;
+            const sumPercChange = p1.fc_sum > 0 ? ((sumChange / p1.fc_sum) * 100) : 0;
+            
+            const qtyChangeClass = qtyChange > 0 ? 'positive' : (qtyChange < 0 ? 'negative' : 'neutral');
+            const sumChangeClass = sumChange > 0 ? 'positive' : (sumChange < 0 ? 'negative' : 'neutral');
+            const qtyPercChangeClass = qtyPercChange > 0 ? 'positive' : (qtyPercChange < 0 ? 'negative' : 'neutral');
+            const sumPercChangeClass = sumPercChange > 0 ? 'positive' : (sumPercChange < 0 ? 'negative' : 'neutral');
+            
+            const qtyChangeSign = qtyChange > 0 ? '+' : '';
+            const sumChangeSign = sumChange > 0 ? '+' : '';
+            const qtyPercChangeSign = qtyPercChange > 0 ? '+' : '';
+            const sumPercChangeSign = sumPercChange > 0 ? '+' : '';
+            
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><span class="prod-name">${productName}</span></td>
+                <td class="num num-light">${formatNum(p1.pl_qty)}</td>
+                <td class="num">${formatNum(p1.fc_qty)}</td>
+                <td class="num">${getBadge(p1_qty_perc)}</td>
+                <td class="num num-light">${formatNum(p1.pl_sum)}</td>
+                <td class="num">${formatNum(p1.fc_sum)}</td>
+                <td class="num num-light">${formatNum(p2.pl_qty)}</td>
+                <td class="num">${formatNum(p2.fc_qty)}</td>
+                <td class="num">${getBadge(p2_qty_perc)}</td>
+                <td class="num num-light">${formatNum(p2.pl_sum)}</td>
+                <td class="num">${formatNum(p2.fc_sum)}</td>
+                <td class="num compare-change ${qtyChangeClass}">${qtyChangeSign}${formatNum(qtyChange)}</td>
+                <td class="num compare-change ${sumChangeClass}">${sumChangeSign}${formatNum(sumChange)}</td>
+                <td class="num compare-change ${sumPercChangeClass}">${sumPercChangeSign}${sumPercChange.toFixed(1)}%</td>
+            `;
+            tbody.appendChild(tr);
+        });
     }
 
     function aggregateMonths(product, monthsToAggregate) {
@@ -1012,6 +2185,20 @@
         const tagsContainer = container.querySelector('.selected-tags'); 
         list.innerHTML = ''; if(tagsContainer) tagsContainer.innerHTML = '';
         
+        // Load saved selection from localStorage
+        const savedKey = `filter_${containerId}`;
+        let savedValues = [];
+        try {
+            const saved = localStorage.getItem(savedKey);
+            if (saved) {
+                savedValues = JSON.parse(saved);
+                // Filter to only include values that exist in current options
+                savedValues = savedValues.filter(v => optionsList.includes(v));
+            }
+        } catch(e) {
+            console.error('Error loading saved filter:', e);
+        }
+        
         let allItem = document.createElement('div');
         allItem.className = 'item'; 
         allItem.innerHTML = `<span class="checkbox"></span><span class="item-text">Выбрать все</span>`;
@@ -1028,6 +2215,12 @@
             let item = document.createElement('div');
             item.className = 'item'; item.dataset.value = opt;
             item.innerHTML = `<span class="checkbox"></span><span class="item-text">${opt}</span>`;
+            
+            // Restore saved selection
+            if (savedValues.length > 0 && savedValues.includes(opt)) {
+                item.classList.add('checked');
+            }
+            
             item.addEventListener('click', (e) => {
                 e.stopPropagation();
                 item.classList.toggle('checked');
@@ -1035,28 +2228,85 @@
                 const allOpts = list.querySelectorAll('.item:not(:first-child)');
                 const allChecked = list.querySelectorAll('.item.checked:not(:first-child)');
                 if(allOpts.length === allChecked.length && allOpts.length > 0) allItem.classList.add('checked');
+                // Immediately update UI and trigger callback
                 updateUI();
             });
             list.appendChild(item);
         });
 
-        if(selectAllByDefault && optionsList.length > 0) { allItem.classList.add('checked'); list.querySelectorAll('.item').forEach(el => el.classList.add('checked')); updateUI(); } else { updateUI(); }
+        // Update "Select All" state based on saved values
+        if (savedValues.length > 0) {
+            const allOpts = list.querySelectorAll('.item:not(:first-child)');
+            const allChecked = list.querySelectorAll('.item.checked:not(:first-child)');
+            if(allOpts.length === allChecked.length && allOpts.length > 0) {
+                allItem.classList.add('checked');
+            }
+        } else if(selectAllByDefault && optionsList.length > 0) { 
+            allItem.classList.add('checked'); 
+            list.querySelectorAll('.item').forEach(el => el.classList.add('checked')); 
+        }
+        
+        // Update UI - this will trigger callback and update variables immediately
+        updateUI();
+        
+        // Ensure callback is called with current values after restoration
+        // This ensures variables are updated even if updateUI was called before elements were ready
+        setTimeout(() => {
+            const currentChecked = Array.from(list.querySelectorAll('.item.checked:not(:first-child)'));
+            const currentValues = currentChecked.map(el => el.dataset.value);
+            if (currentValues.length > 0 && onChangeCallback) {
+                onChangeCallback(currentValues);
+            }
+        }, 50);
 
         function updateUI() {
             const checkedItems = Array.from(list.querySelectorAll('.item.checked:not(:first-child)'));
             const values = checkedItems.map(el => el.dataset.value);
-            if(checkedItems.length === 0) btn.innerText = "Выберите...";
-            else if (checkedItems.length === optionsList.length && optionsList.length > 0) btn.innerText = "Все выбраны";
-            else btn.innerText = `Выбрано (${checkedItems.length})`;
+            
+            // Save selection to localStorage
+            try {
+                localStorage.setItem(savedKey, JSON.stringify(values));
+            } catch(e) {
+                console.error('Error saving filter:', e);
+            }
+            
+            // Update button text
+            if(checkedItems.length === 0) {
+                btn.innerText = "Выберите...";
+            } else if (checkedItems.length === optionsList.length && optionsList.length > 1) {
+                btn.innerText = "Все выбраны";
+            } else if (checkedItems.length === 1) {
+                btn.innerText = values[0];
+            } else {
+                btn.innerText = `Выбрано (${checkedItems.length})`;
+            }
 
+            // Update tags - always show individual tags with specific names
             if(tagsContainer) {
                 tagsContainer.innerHTML = '';
                 if(checkedItems.length > 0) {
-                    if (checkedItems.length === optionsList.length) { renderTag("Все выбраны", () => allItem.click()); } 
-                    else { values.forEach(val => renderTag(val, () => { const item = list.querySelector(`.item[data-value="${val}"]`); if(item) item.click(); })); }
+                    // Show "Все выбраны" only if all items are selected AND there's more than 1 option
+                    if (checkedItems.length === optionsList.length && optionsList.length > 1) { 
+                        renderTag("Все выбраны", () => allItem.click()); 
+                    } else { 
+                        // Always show individual tags with specific names (Альфа, Бета, etc.)
+                        // Show ALL selected values as individual tags
+                        values.forEach(val => {
+                            if (val) { // Make sure value exists
+                                renderTag(val, () => { 
+                                    const item = list.querySelector(`.item[data-value="${val}"]`); 
+                                    if(item) item.click(); 
+                                });
+                            }
+                        }); 
+                    }
                 }
             }
-            onChangeCallback(values);
+            
+            // Call callback immediately and synchronously to update variables
+            if (onChangeCallback && typeof onChangeCallback === 'function') {
+                onChangeCallback(values);
+            }
         }
 
         function renderTag(text, onRemove) {
